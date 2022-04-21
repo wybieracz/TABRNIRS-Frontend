@@ -1,0 +1,36 @@
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  - develop
+  - stage
+  - staging
+  - development
+  - stage
+  - staging
+  - master
+  - main
+  - devops/build-pipelines
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: |
+      set -e    
+      yarn install
+      source devops/env-set.sh $(Build.SourceBranchName)
+      printenv | grep ^REACT
+      echo
+      ls -al
+      yarn build || exit 1
+      mv build/* $(Build.ArtifactStagingDirectory)
+    displayName: 'yarn install and build'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Upload Artifacts to built frontend'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'tabrnirs-frontend'
