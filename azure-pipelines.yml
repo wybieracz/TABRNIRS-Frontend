@@ -5,14 +5,7 @@
 
 trigger:
   - develop
-  - stage
-  - staging
-  - development
-  - stage
-  - staging
-  - master
   - main
-  - devops/build-pipelines
 
 pool:
   vmImage: ubuntu-latest
