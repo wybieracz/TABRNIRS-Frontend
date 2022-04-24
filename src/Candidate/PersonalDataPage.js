@@ -12,13 +12,16 @@ export default function PersonalData({ isLogged }) {
         try {
             await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
                 response => {
+                    console.log(response)
                     setData({
                         ...data,
-                        userId: `${response.userId}`,
-                        surname: `${response.surname}`,
-                        pesel: `${response.pesel}`,
-                        hometown: `${response.hometown}`,
-                        streetAddress: `${response.name}`
+                        userId: `${response.data.userId}`,
+                        name: `${response.data.name}`,
+                        surname: `${response.data.surname}`,
+                        pesel: `${response.data.pesel}`,
+                        hometown: `${response.data.hometown}`,
+                        streetAddress: `${response.data.streetAddress}`,
+                        userEmail: `${response.data.userEmail}`
                     })
                 }
             );
@@ -97,12 +100,12 @@ export default function PersonalData({ isLogged }) {
                 </Col>
             </Row>
 
-            <Form.Group size="lg" controlId="email">
+            <Form.Group size="lg" controlId="userEmail">
                 <Form.Label>Adres email</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.email}
-                  onChange={(e) => setData({...data, email: `${e.target.value}`})}
+                  value={data.userEmail}
+                  onChange={(e) => setData({...data, userEmail: `${e.target.value}`})}
                 />
             </Form.Group>
             

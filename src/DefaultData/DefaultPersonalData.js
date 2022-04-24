@@ -1,6 +1,6 @@
 const defaultPersonalData = {
     "userId": "",
-    "email": "",
+    "userEmail": "",
     "name": "",
     "surname": "",
     "pesel": "",

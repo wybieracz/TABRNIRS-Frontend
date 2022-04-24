@@ -4,6 +4,7 @@ import { NavLinkWrapper } from "./NavLinkStyled";
 import { Navbar, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export default function CandidateNavBar({ setIsLogged }) {
 

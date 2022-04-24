@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import LoadingIcon from "../../Bitmaps/Load_White.png";
 import { LoadingIconWrapper, ButtonIconWrapper } from "../../Bitmaps/IconsStyled";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function LoginPage({ setIsLogged }) {
 
