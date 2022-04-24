@@ -2,10 +2,36 @@ import React, { useEffect, useState } from "react";
 import { ContentWrapper } from '../Styled/ContentWrapperStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 import { defaultPersonalData } from "../DefaultData/DefaultPersonalData";
+import axios from "axios";
 
-export default function PersonalData() {
+export default function PersonalData({ isLogged }) {
 
     const [data, setData] = useState(defaultPersonalData);
+
+    async function handleGetUser() {
+        try {
+            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
+                response => {
+                    setData({
+                        ...data,
+                        userId: `${response.userId}`,
+                        surname: `${response.surname}`,
+                        pesel: `${response.pesel}`,
+                        hometown: `${response.hometown}`,
+                        streetAddress: `${response.name}`
+                    })
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        if(isLogged) {
+            handleGetUser()
+        }
+    }, [isLogged]);
 
     return(
         <ContentWrapper>
