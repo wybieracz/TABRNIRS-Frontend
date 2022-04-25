@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ContentWrapper } from '../Styled/ContentWrapperStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 import { defaultPersonalData } from "../DefaultData/DefaultPersonalData";
+import LoadingIcon from "../Bitmaps/Load_White.png";
+import { LoadingIconWrapper, ButtonIconWrapper } from "../Bitmaps/IconsStyled";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -9,25 +11,42 @@ axios.defaults.withCredentials = true;
 export default function PersonalData({ userId }) {
 
     const [data, setData] = useState(defaultPersonalData);
+    const [isRequestSent, setRequestSent] = useState(false);
 
     async function handleGetUser() {
         try {
             await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
                 response => {
                     setData({
-                        ...data,
                         userId: `${response.data.userId}`,
+                        email: `${response.data.email}`,
                         name: `${response.data.name}`,
                         surname: `${response.data.surname}`,
                         pesel: `${response.data.pesel}`,
                         hometown: `${response.data.hometown}`,
                         streetAddress: `${response.data.streetAddress}`,
-                        userEmail: `${response.data.userEmail}`
+                        postalCode: `${response.data.postalCode}`
                     })
                 }
             );
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    async function handlePutUser() {
+        setRequestSent(true);
+        try {
+            await axios.put("https://dev-tabrnirs-be-app.azurewebsites.net/user", data).then(
+                response => {
+                    alert("Pomyślnie zmieniono dane!")
+                    setRequestSent(false)
+                }
+            );
+        } catch (error) {
+            console.error(error);
+            alert("Coś poszło nie tak :(")
+            setRequestSent(false)
         }
     }
 
@@ -64,7 +83,7 @@ export default function PersonalData({ userId }) {
                 <Form.Control
                   type="text"
                   value={data.pesel}
-                  onChange={(e) => setData({...data, pesel: `${e.target.value}`})}
+                  disabled
                 />
             </Form.Group>
 
@@ -90,27 +109,34 @@ export default function PersonalData({ userId }) {
                 </Col>
 
                 <Col>
-                    <Form.Group size="lg" controlId="postcode">
+                    <Form.Group size="lg" controlId="postalCode">
                         <Form.Label>Kod pocztowy</Form.Label>
                         <Form.Control
                         type="text"
-                        value={data.postcode}
-                        onChange={(e) => setData({...data, postcode: `${e.target.value}`})}
+                        value={data.postalCode}
+                        onChange={(e) => setData({...data, postalCode: `${e.target.value}`})}
                         />
                     </Form.Group>
                 </Col>
             </Row>
 
-            <Form.Group size="lg" controlId="userEmail">
+            <Form.Group size="lg" controlId="email">
                 <Form.Label>Adres email</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.userEmail}
-                  onChange={(e) => setData({...data, userEmail: `${e.target.value}`})}
+                  value={data.email}
+                  onChange={(e) => setData({...data, email: `${e.target.value}`})}
                 />
             </Form.Group>
             
-            <Button variant="primary" onClick={() => console.log(data)}>Aktualizuj</Button>
+            <Button variant="primary" onClick={() => handlePutUser()}>{ isRequestSent
+                  ? <ButtonIconWrapper>
+                      <LoadingIconWrapper size="20px">
+                        <img src={LoadingIcon} alt="LoadingIcon" width="20px" heigth="20px" />
+                      </LoadingIconWrapper>
+                    </ButtonIconWrapper>
+                  : "Zapisz"
+                }</Button>
         </Form.Group>
         </ContentWrapper>
     );

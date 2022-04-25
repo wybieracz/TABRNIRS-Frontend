@@ -1,12 +1,12 @@
 const defaultPersonalData = {
     "userId": "",
-    "userEmail": "",
+    "email": "",
     "name": "",
     "surname": "",
     "pesel": "",
     "hometown": "",
-    "postcode": "",
-    "streetAddress": ""
+    "streetAddress": "",
+    "postalCode": ""
 };
 
 export { defaultPersonalData }

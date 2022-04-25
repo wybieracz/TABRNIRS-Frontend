@@ -24,7 +24,7 @@ function LoginPage({ setUserId }) {
     try {
       await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials)
     } catch (error) {
-        alert("Something went wrong :(")
+        alert("Błędny login lub hasło!")
         console.error(error);
         setRequestSent(false)
         navigate("/")
