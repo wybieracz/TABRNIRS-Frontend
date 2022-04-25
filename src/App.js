@@ -12,23 +12,22 @@ import PersonalData from "./Candidate/PersonalDataPage";
 function App() {
 
   const [userId, setUserId] = useState("");
-  const [isLogged, setIsLogged] = useState(false);
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<LoginPage setIsLogged={setIsLogged} />} />
+        <Route exact path="/" element={<LoginPage setUserId={setUserId} />} />
         <Route exact path="/register" element={<RegisterPage />} />
         <Route exact path="/candidate/personal-data" element={
-          <><CandidateNavBar setIsLogged={setIsLogged} />
-          <PersonalData setUserId={setUserId} isLogged={isLogged} /></>
+          <><CandidateNavBar setUserId={setUserId} />
+          <PersonalData setUserId={setUserId} userId={userId} /></>
         } />
         <Route exact path="/candidate/recruitment-data" element={
-          <><CandidateNavBar setIsLogged={setIsLogged} />
+          <><CandidateNavBar setUserId={setUserId} />
           <BlankPage /></>
         } />
         <Route exact path="/candidate/applications" element={
-          <><CandidateNavBar setIsLogged={setIsLogged} />
+          <><CandidateNavBar setUserId={setUserId} />
           <BlankPage /></>
         } />
         <Route exact path="/recruiter/personal-data" element={

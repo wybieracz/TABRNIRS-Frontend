@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-export default function CandidateNavBar({ setIsLogged }) {
+export default function CandidateNavBar({ setUserId }) {
 
     const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ export default function CandidateNavBar({ setIsLogged }) {
         try {
             await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/logout").then(
                 response => {
-                    setIsLogged(false)
+                    setUserId("")
                     navigate("/")
                 }
             );
@@ -22,7 +22,7 @@ export default function CandidateNavBar({ setIsLogged }) {
             console.error(error);
             navigate("/")
         }
-      }
+    }
 
     return(
         <Navbar className="sticky-top navbar-expand-lg navbar-dark bg-dark pr-2 justify-content-between">

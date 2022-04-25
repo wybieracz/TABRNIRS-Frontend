@@ -4,7 +4,9 @@ import { Button, Row, Col, Form } from 'react-bootstrap';
 import { defaultPersonalData } from "../DefaultData/DefaultPersonalData";
 import axios from "axios";
 
-export default function PersonalData({ isLogged }) {
+axios.defaults.withCredentials = true;
+
+export default function PersonalData({ userId }) {
 
     const [data, setData] = useState(defaultPersonalData);
 
@@ -12,7 +14,6 @@ export default function PersonalData({ isLogged }) {
         try {
             await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
                 response => {
-                    console.log(response)
                     setData({
                         ...data,
                         userId: `${response.data.userId}`,
@@ -31,10 +32,10 @@ export default function PersonalData({ isLogged }) {
     }
 
     useEffect(() => {
-        if(isLogged) {
+        if(userId !== "") {
             handleGetUser()
         }
-    }, [isLogged]);
+    }, [userId]);
 
     return(
         <ContentWrapper>

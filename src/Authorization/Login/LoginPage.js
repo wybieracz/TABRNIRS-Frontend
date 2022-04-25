@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { defaultCredentails } from "../../DefaultData/DefaultCredentials";
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { LoadingIconWrapper, ButtonIconWrapper } from "../../Bitmaps/IconsStyled
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-function LoginPage({ setIsLogged }) {
+function LoginPage({ setUserId }) {
 
   const [credentials, setCredentials] = useState(defaultCredentails);
   const [isRequestSent, setRequestSent] = useState(false);
@@ -16,22 +16,29 @@ function LoginPage({ setIsLogged }) {
   function onKeyDown(event) {
     if (event.key === "Enter" || event.key === "NumpadEnter") {
       handleLogin();
-      console.log("renter")
     }
   }
 
   async function handleLogin() {
     setRequestSent(true);
     try {
-        await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials).then(
-            response => {
-              setIsLogged(true)
-              navigate("/candidate/personal-data")
-              setRequestSent(false)
-            }
-        );
+      await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials)
     } catch (error) {
         alert("Something went wrong :(")
+        console.error(error);
+        setRequestSent(false)
+        navigate("/")
+    }
+
+    try {
+      await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id").then(
+          response => {
+            setUserId(response.data)
+            navigate("/candidate/personal-data")
+            setRequestSent(false)
+          }
+      );
+    } catch (error) {
         console.error(error);
         setRequestSent(false)
         navigate("/")
