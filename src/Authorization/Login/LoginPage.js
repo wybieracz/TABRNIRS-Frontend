@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { defaultCredentails } from "../../DefaultData/DefaultCredentials";
 import { useNavigate } from 'react-router-dom';
-import LoadingIcon from "../../Bitmaps/Load_White.png";
-import { LoadingIconWrapper, ButtonIconWrapper } from "../../Bitmaps/IconsStyled";
+import LoadingIcon from "../../Graphic/Load_White.png";
+import { LoadingIconWrapper, ButtonIconWrapper } from "../../Graphic/IconsStyled";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 

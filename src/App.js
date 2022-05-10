@@ -8,6 +8,7 @@ import BlankPage from "./Pages/BlankPage";
 import CandidateNavBar from "./NavBars/CandidateNavBar";
 import RecruiterNavBar from "./NavBars/RecruiterNavBar";
 import PersonalData from "./Candidate/PersonalDataPage";
+import Applications from "./Candidate/ApplicationsPage";
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
         } />
         <Route exact path="/candidate/applications" element={
           <><CandidateNavBar setUserId={setUserId} />
-          <BlankPage /></>
+          <Applications /></>
         } />
         <Route exact path="/recruiter/personal-data" element={
           <><RecruiterNavBar />

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ContentWrapper } from '../Styled/ContentWrapperStyled';
+import { ContentWrapper } from './PersonalDataPageStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 import { defaultPersonalData } from "../DefaultData/DefaultPersonalData";
-import LoadingIcon from "../Bitmaps/Load_White.png";
-import { LoadingIconWrapper, ButtonIconWrapper } from "../Bitmaps/IconsStyled";
+import LoadingIcon from "../Graphic/Load_White.png";
+import { LoadingIconWrapper, ButtonIconWrapper } from "../Graphic/IconsStyled";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
