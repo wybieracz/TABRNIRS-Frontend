@@ -38,7 +38,7 @@ export default function Applications() {
         <AppsContentWrapper>
         <Container fluid className="px-0">
             {temp.map((element, index) => (
-                <>
+                <div key={index}>
                 <Row className="p-4" onClick={()=>test(index)}>
                     <Col className="text-start"><b>{element.course}</b></Col>
                     <Col className="text-center">{element.department}</Col>
@@ -63,7 +63,7 @@ export default function Applications() {
                     }</Col>
                 </Row>
                 {temp.length > index + 1 ? <Separator /> : null}
-                </>
+                </div>
             ))}
         </Container>
         </AppsContentWrapper>
