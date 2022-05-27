@@ -9,26 +9,10 @@ function test(num) {
     console.log(num)
 }
 
-export default function Applications({ recruitmentData, apps, handleGetApps }) {
+export default function Applications({ recruitmentData, apps, handleGetApps, faculties }) {
 
     const [isModalActive, setIsModalActive] = useState(false);
-    const [faculties, setFaculties] = useState([""]);
     const [specs, setSpesc] = useState([]);
-    //const [apps, setApps] = useState([]);
-
-    async function handleGetFaculties() {
-        try {
-            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/faculties").then(
-                response => {
-                    let temp = response.data.map(element => {return element.facultyName});
-                    temp.unshift("")
-                    setFaculties(temp)
-                }
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    }
     
     async function handleGetSpecs() {
         try {
@@ -47,7 +31,6 @@ export default function Applications({ recruitmentData, apps, handleGetApps }) {
     }
 
     useEffect(() => {
-        handleGetFaculties()
         handleGetSpecs()
     }, []);
 

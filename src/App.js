@@ -11,15 +11,17 @@ import PersonalData from "./Candidate/PersonalDataPage";
 import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
 import RecruiterLoginPage from "./Authorization/Login/RecruiterLoginPage";
+import Faculties from "./Recruiter/FacultiesPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
 import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
-import { getSubjects, getUserId, getUser, getApps } from "./AppUtility";
+import { getSubjects, getUserId, getUser, getApps, getFaculties } from "./AppUtility";
 
 function App() {
 
   const [userId, setUserId] = useState("");
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [personalData, setPersonalData] = useState(defaultPersonalData);
+  const [faculties, setFaculties] = useState([]);
 
   // user
   const [apps, setApps] = useState([]);
@@ -29,15 +31,21 @@ function App() {
 
 
   useEffect(() => {
+
     if(userId !== "") {
+
       if(isRecruiter) {
+
+        getUser(setPersonalData)
+      }
+      else {
+
         getUser(setPersonalData)
         getSubjects(setRecruitmentData)
         getApps(setApps)
       }
-      else {
-        getUser(setPersonalData)
-      }
+
+      getFaculties(setFaculties)
     }
     else getUserId(setUserId)
   }, [userId]);
@@ -73,7 +81,7 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <Applications recruitmentData={recruitmentData} apps={apps} handleGetApps={() => getApps(setApps)} />
+              <Applications recruitmentData={recruitmentData} apps={apps} handleGetApps={() => getApps(setApps)} faculties={faculties}/>
             </>
           }
         />
@@ -114,7 +122,7 @@ function App() {
           element={
             <>
               <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <BlankPage />
+              <Faculties userId={userId} faculties={faculties} setFaculties={setFaculties} />
             </>
           }
         />

@@ -29,7 +29,7 @@ function LoginPage({ setUserId }) {
       alert("Błędny login lub hasło!");
       console.error(error);
       setRequestSent(false);
-      navigate("/recruiter/login");
+      navigate("/");
     }
     
     try {
@@ -37,13 +37,13 @@ function LoginPage({ setUserId }) {
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
       .then((response) => {
         setUserId(response.data);
-        navigate("/recruiter/personal-data");
+        navigate("/candidate/personal-data");
         setRequestSent(false);
       });
     } catch (error) {
       console.error(error);
       setRequestSent(false);
-      navigate("/recruiter/login");
+      navigate("/");
     }
   }
 

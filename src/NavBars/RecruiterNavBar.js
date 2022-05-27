@@ -21,8 +21,6 @@ export default function RecruiterNavBar({ setUserId, setIsRecruiter }) {
             );
         } catch (error) {
             console.error(error)
-            //setIsRecruiter(true)
-            //navigate("/recruiter/login")
         }
     }
 

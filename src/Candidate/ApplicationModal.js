@@ -10,6 +10,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
     const [isRequestSent, setIsRequestSent] = useState(false);
     const [data, setData] = useState(defaultApplicationData);
+    //const [faculties, setFaculties] = useState
     const [specializations, setSpecializations] = useState([""]);
     const [baseSubjects, setBaseSubjects] = useState([""]);
     const [subjects, setSubjects] = useState([""]);
@@ -134,6 +135,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         value={data.faculty}
                         onChange={(e) => setData({...data, "faculty": e.target.value})}
                     >
+                        <option value=""></option>
                         {faculties.map((element, index) => (
                             <option value={element} key={index}>{element}</option>
                         ))}

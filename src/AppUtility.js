@@ -82,4 +82,18 @@ async function getApps(setApps) {
     }
 }
 
-export { getSubjects, getUserId, getUser, getApps }
+async function getFaculties(setFaculties) {
+    try {
+        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/faculties").then(
+            response => {
+                let temp = response.data.map(element => {return element.facultyName});
+                temp.sort()
+                setFaculties(temp)
+            }
+        );
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export { getSubjects, getUserId, getUser, getApps, getFaculties }
