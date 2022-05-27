@@ -59,7 +59,7 @@ export default function RecruitmentData({ userId, recruitmentData, setRecruitmen
         const arr = Array(countChanged());
         let count = 0;
 
-        if(arr.length != 0) {
+        if(arr.length !== 0) {
 
             setIsRequestSent(true)
 

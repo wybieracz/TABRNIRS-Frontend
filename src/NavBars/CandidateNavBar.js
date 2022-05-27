@@ -20,7 +20,7 @@ export default function CandidateNavBar({ setUserId }) {
             );
         } catch (error) {
             console.error(error)
-            navigate("/")
+            //navigate("/")
         }
     }
 

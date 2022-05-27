@@ -10,6 +10,7 @@ import RecruiterNavBar from "./NavBars/RecruiterNavBar";
 import PersonalData from "./Candidate/PersonalDataPage";
 import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
+import RecruiterLoginPage from "./Authorization/Login/RecruiterLoginPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
 import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
 import { getSubjects, getUserId, getUser, getApps } from "./AppUtility";
@@ -17,15 +18,26 @@ import { getSubjects, getUserId, getUser, getApps } from "./AppUtility";
 function App() {
 
   const [userId, setUserId] = useState("");
+  const [isRecruiter, setIsRecruiter] = useState(false);
+  const [personalData, setPersonalData] = useState(defaultPersonalData);
+
+  // user
   const [apps, setApps] = useState([]);
   const [recruitmentData, setRecruitmentData] = useState(defaultRecruitmentData);
-  const [personalData, setPersonalData] = useState(defaultPersonalData);
+
+  // recruiter
+
 
   useEffect(() => {
     if(userId !== "") {
-      getUser(setPersonalData)
-      getSubjects(setRecruitmentData)
-      getApps(setApps)
+      if(isRecruiter) {
+        getUser(setPersonalData)
+        getSubjects(setRecruitmentData)
+        getApps(setApps)
+      }
+      else {
+        getUser(setPersonalData)
+      }
     }
     else getUserId(setUserId)
   }, [userId]);
@@ -65,13 +77,14 @@ function App() {
             </>
           }
         />
+        <Route exact path="/recruiter/login" element={<RecruiterLoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
         <Route
           exact
           path="/recruiter/personal-data"
           element={
             <>
-              <RecruiterNavBar />
-              <PersonalData />
+              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
+              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
             </>
           }
         />
@@ -80,7 +93,7 @@ function App() {
           path="/recruiter/applications"
           element={
             <>
-              <RecruiterNavBar />
+              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
               <BlankPage />
             </>
           }
@@ -90,7 +103,17 @@ function App() {
           path="/recruiter/majors"
           element={
             <>
-              <RecruiterNavBar />
+              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
+              <BlankPage />
+            </>
+          }
+        />
+        <Route
+          exact
+          path="/recruiter/faculties"
+          element={
+            <>
+              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
               <BlankPage />
             </>
           }

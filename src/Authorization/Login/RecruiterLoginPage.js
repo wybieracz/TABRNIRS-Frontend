@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-function LoginPage({ setUserId }) {
+export default function RecruiterLoginPage({ setUserId, setIsRecruiter }) {
   const [credentials, setCredentials] = useState(defaultCredentails);
   const [isRequestSent, setRequestSent] = useState(false);
   const navigate = useNavigate();
@@ -29,13 +29,14 @@ function LoginPage({ setUserId }) {
       alert("Błędny login lub hasło!");
       console.error(error);
       setRequestSent(false);
-      navigate("/recruiter/login");
+      navigate("/");
     }
     
     try {
       await axios
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
       .then((response) => {
+        setIsRecruiter(true)
         setUserId(response.data);
         navigate("/recruiter/personal-data");
         setRequestSent(false);
@@ -43,7 +44,7 @@ function LoginPage({ setUserId }) {
     } catch (error) {
       console.error(error);
       setRequestSent(false);
-      navigate("/recruiter/login");
+      navigate("/");
     }
   }
 
@@ -99,16 +100,9 @@ function LoginPage({ setUserId }) {
                 )}
               </Button>
             </Form>
-            <div className="mt-5 primary text-center">
-              <h6>
-                Nie masz konta? <Link to="/register">Zarejestruj się</Link>
-              </h6>
-            </div>
           </Col>
         </Row>
       </Container>
     </div>
   );
 }
-
-export default LoginPage;
