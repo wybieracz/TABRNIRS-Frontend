@@ -19,7 +19,7 @@ export default function CandidateNavBar({ setUserId }) {
                 }
             );
         } catch (error) {
-            console.error(error);
+            console.error(error)
             navigate("/")
         }
     }

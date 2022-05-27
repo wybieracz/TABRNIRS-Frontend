@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { AppsContentWrapper, ButtonWrapper, Separator } from './ApplicationsPageStyled';
-import { OkIcon, NoIcon } from '../Graphic/Icons';
-import { StatusIcon } from './ApplicationsPageStyled';
 import ApplicationStatusIcon from './ApplicationStatusIcon';
 import ApplicationModal from './ApplicationModal';
 import axios from 'axios';
@@ -11,12 +9,12 @@ function test(num) {
     console.log(num)
 }
 
-export default function Applications({ userId, recruitmentData }) {
+export default function Applications({ recruitmentData, apps, handleGetApps }) {
 
     const [isModalActive, setIsModalActive] = useState(false);
     const [faculties, setFaculties] = useState([""]);
     const [specs, setSpesc] = useState([]);
-    const [apps, setApps] = useState([]);
+    //const [apps, setApps] = useState([]);
 
     async function handleGetFaculties() {
         try {
@@ -44,19 +42,6 @@ export default function Applications({ userId, recruitmentData }) {
         }
     }
 
-    async function handleGetApps() {
-
-        try {
-            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/apps").then(
-                response => {
-                    setApps(response.data)
-                }
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     function handleClick() {
         setIsModalActive(true);
     }
@@ -65,12 +50,6 @@ export default function Applications({ userId, recruitmentData }) {
         handleGetFaculties()
         handleGetSpecs()
     }, []);
-
-    useEffect(() => {
-        if(userId !== "") {
-            handleGetApps()
-        }
-    }, [userId]);
 
     return(
         <>

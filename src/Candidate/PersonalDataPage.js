@@ -1,43 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ContentWrapper } from './PersonalDataPageStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
-import { defaultPersonalData } from "../DefaultData/DefaultPersonalData";
 import LoadingIcon from "../Graphic/Load_White.png";
 import { LoadingIconWrapper, ButtonIconWrapper } from "../Graphic/IconsStyled";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-export default function PersonalData({ userId }) {
+export default function PersonalData({ personalData, setPersonalData }) {
 
-    const [data, setData] = useState(defaultPersonalData);
     const [isRequestSent, setRequestSent] = useState(false);
-
-    async function handleGetUser() {
-        try {
-            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
-                response => {
-                    setData({
-                        userId: `${response.data.userId}`,
-                        email: `${response.data.email}`,
-                        name: `${response.data.name}`,
-                        surname: `${response.data.surname}`,
-                        pesel: `${response.data.pesel}`,
-                        hometown: `${response.data.hometown}`,
-                        streetAddress: `${response.data.streetAddress}`,
-                        postalCode: `${response.data.postalCode}`
-                    })
-                }
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function handlePutUser() {
         setRequestSent(true);
         try {
-            await axios.put("https://dev-tabrnirs-be-app.azurewebsites.net/user", data).then(
+            await axios.put("https://dev-tabrnirs-be-app.azurewebsites.net/user", personalData).then(
                 response => {
                     alert("Pomyślnie zmieniono dane!")
                     setRequestSent(false)
@@ -50,12 +27,6 @@ export default function PersonalData({ userId }) {
         }
     }
 
-    useEffect(() => {
-        if(userId !== "") {
-            handleGetUser()
-        }
-    }, [userId]);
-
     return(
         <ContentWrapper>
         <Form.Group className="d-grid gap-4">
@@ -64,8 +35,8 @@ export default function PersonalData({ userId }) {
                 <Form.Label>Imiona</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.name}
-                  onChange={(e) => setData({...data, name: `${e.target.value}`})}
+                  value={personalData.name}
+                  onChange={(e) => setPersonalData({...personalData, name: `${e.target.value}`})}
                 />
             </Form.Group>
 
@@ -73,8 +44,8 @@ export default function PersonalData({ userId }) {
                 <Form.Label>Nazwisko</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.surname}
-                  onChange={(e) => setData({...data, surname: `${e.target.value}`})}
+                  value={personalData.surname}
+                  onChange={(e) => setPersonalData({...personalData, surname: `${e.target.value}`})}
                 />
             </Form.Group>
 
@@ -82,7 +53,7 @@ export default function PersonalData({ userId }) {
                 <Form.Label>PESEL</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.pesel}
+                  value={personalData.pesel}
                   disabled
                 />
             </Form.Group>
@@ -91,8 +62,8 @@ export default function PersonalData({ userId }) {
                 <Form.Label>Adres zamieszkania</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.streetAddress}
-                  onChange={(e) => setData({...data, streetAddress: `${e.target.value}`})}
+                  value={personalData.streetAddress}
+                  onChange={(e) => setPersonalData({...personalData, streetAddress: `${e.target.value}`})}
                 />
             </Form.Group>
 
@@ -102,8 +73,8 @@ export default function PersonalData({ userId }) {
                         <Form.Label>Miasto</Form.Label>
                         <Form.Control
                         type="text"
-                        value={data.hometown}
-                        onChange={(e) => setData({...data, hometown: `${e.target.value}`})}
+                        value={personalData.hometown}
+                        onChange={(e) => setPersonalData({...personalData, hometown: `${e.target.value}`})}
                         />
                     </Form.Group>
                 </Col>
@@ -113,8 +84,8 @@ export default function PersonalData({ userId }) {
                         <Form.Label>Kod pocztowy</Form.Label>
                         <Form.Control
                         type="text"
-                        value={data.postalCode}
-                        onChange={(e) => setData({...data, postalCode: `${e.target.value}`})}
+                        value={personalData.postalCode}
+                        onChange={(e) => setPersonalData({...personalData, postalCode: `${e.target.value}`})}
                         />
                     </Form.Group>
                 </Col>
@@ -124,8 +95,8 @@ export default function PersonalData({ userId }) {
                 <Form.Label>Adres email</Form.Label>
                 <Form.Control
                   type="text"
-                  value={data.email}
-                  onChange={(e) => setData({...data, email: `${e.target.value}`})}
+                  value={personalData.email}
+                  onChange={(e) => setPersonalData({...personalData, email: `${e.target.value}`})}
                 />
             </Form.Group>
             

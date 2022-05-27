@@ -11,14 +11,22 @@ import PersonalData from "./Candidate/PersonalDataPage";
 import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
-import { getSubjects, getUserId } from "./AppUtility";
+import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
+import { getSubjects, getUserId, getUser, getApps } from "./AppUtility";
 
 function App() {
+
   const [userId, setUserId] = useState("");
+  const [apps, setApps] = useState([]);
   const [recruitmentData, setRecruitmentData] = useState(defaultRecruitmentData);
+  const [personalData, setPersonalData] = useState(defaultPersonalData);
 
   useEffect(() => {
-    if(userId !== "") getSubjects(setRecruitmentData)
+    if(userId !== "") {
+      getUser(setPersonalData)
+      getSubjects(setRecruitmentData)
+      getApps(setApps)
+    }
     else getUserId(setUserId)
   }, [userId]);
 
@@ -33,7 +41,7 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <PersonalData userId={userId} />
+              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
             </>
           }
         />
@@ -53,7 +61,7 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <Applications userId={userId} recruitmentData={recruitmentData} />
+              <Applications recruitmentData={recruitmentData} apps={apps} handleGetApps={() => getApps(setApps)} />
             </>
           }
         />

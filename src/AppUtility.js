@@ -7,7 +7,7 @@ async function getSubjects(setRecruitmentData) {
                 const temp = response.data.map(function(element) {
                     return {"active": false, "subject": element, "points": 0}
                 });
-                getRecruitmentDataRequest(temp, setRecruitmentData)
+                getRecruitmentData(temp, setRecruitmentData)
             }
         );
     } catch (error) {
@@ -15,7 +15,7 @@ async function getSubjects(setRecruitmentData) {
     }
 }
 
-async function getRecruitmentDataRequest(recruitmentData, setRecruitmentData) {
+async function getRecruitmentData(recruitmentData, setRecruitmentData) {
     try {
         await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/result").then(
             response => {
@@ -46,6 +46,40 @@ async function getUserId(setUserId) {
     } catch (error) {
         console.error(error);
     }
-  }
+}
 
-export { getSubjects, getUserId }
+async function getUser(setPersonalData) {
+    try {
+        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user").then(
+            response => {
+                setPersonalData({
+                    userId: `${response.data.userId}`,
+                    email: `${response.data.email}`,
+                    name: `${response.data.name}`,
+                    surname: `${response.data.surname}`,
+                    pesel: `${response.data.pesel}`,
+                    hometown: `${response.data.hometown}`,
+                    streetAddress: `${response.data.streetAddress}`,
+                    postalCode: `${response.data.postalCode}`
+                })
+            }
+        );
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getApps(setApps) {
+
+    try {
+        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/apps").then(
+            response => {
+                setApps(response.data)
+            }
+        );
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export { getSubjects, getUserId, getUser, getApps }

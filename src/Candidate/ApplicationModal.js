@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Form, Modal, Button } from 'react-bootstrap';
 import { defaultApplicationData } from "../DefaultData/DefaultApplicationData";
 import { ButtonIconWrapper, LoadingIconWrapper } from "../Graphic/IconsStyled";
-import { ModalButtonWrapper } from "./ApplicationsPageStyled";
 import LoadingIcon from "../Graphic/Load_White.png";
 import "../BootstrapCustom.css";
 import axios from "axios";
