@@ -23,27 +23,23 @@ function LoginPage({ setUserId }) {
 
   async function handleLogin() {
     setRequestSent(true);
-    console.log(credentials);
     try {
-      await axios.post(
-        "https://dev-tabrnirs-be-app.azurewebsites.net/login",
-        credentials
-      );
+      await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials)
     } catch (error) {
       alert("Błędny login lub hasło!");
       console.error(error);
       setRequestSent(false);
       navigate("/");
     }
-
+    
     try {
       await axios
-        .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
-        .then((response) => {
-          setUserId(response.data);
-          navigate("/candidate/personal-data");
-          setRequestSent(false);
-        });
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
+      .then((response) => {
+        setUserId(response.data);
+        navigate("/candidate/personal-data");
+        setRequestSent(false);
+      });
     } catch (error) {
       console.error(error);
       setRequestSent(false);

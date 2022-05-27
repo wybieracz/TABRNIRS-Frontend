@@ -1,68 +1,89 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { AppsContentWrapper, ButtonWrapper, Separator } from './ApplicationsPageStyled';
-import { OkIcon, NoIcon } from '../Graphic/Icons'
-import { StatusIcon } from './ApplicationsPageStyled'
-
-const Raspberry = "#D8002A";
-const Green = "#53A548";
-const Blue = "#0B5ED7";
-
-const temp = [{
-    "course": "Informatyka",
-    "department": "Wydział Autoamtyki, Elektroniki i Informatyki",
-    "status": "Zaakceptowano"
-},
-{
-    "course": "Informatics",
-    "department": "Wydział Autoamtyki, Elektroniki i Informatyki",
-    "status": "Odrzucono"
-},
-{
-    "course": "Teleinfotrmatyka",
-    "department": "Wydział Autoamtyki, Elektroniki i Informatyki",
-    "status": "Czeka na decyzję"
-}]
-
-function handleClick() {
-    console.log(temp)
-}
+import { OkIcon, NoIcon } from '../Graphic/Icons';
+import { StatusIcon } from './ApplicationsPageStyled';
+import ApplicationStatusIcon from './ApplicationStatusIcon';
+import ApplicationModal from './ApplicationModal';
+import axios from 'axios';
 
 function test(num) {
     console.log(num)
 }
 
-export default function Applications() {
+export default function Applications({ userId, recruitmentData }) {
+
+    const [isModalActive, setIsModalActive] = useState(false);
+    const [faculties, setFaculties] = useState([""]);
+    const [specs, setSpesc] = useState([]);
+    const [apps, setApps] = useState([]);
+
+    async function handleGetFaculties() {
+        try {
+            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/faculties").then(
+                response => {
+                    let temp = response.data.map(element => {return element.facultyName});
+                    temp.unshift("")
+                    setFaculties(temp)
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    async function handleGetSpecs() {
+        try {
+            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/specs/subjects").then(
+                response => {
+                    setSpesc(response.data)
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function handleGetApps() {
+
+        try {
+            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/apps").then(
+                response => {
+                    setApps(response.data)
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function handleClick() {
+        setIsModalActive(true);
+    }
+
+    useEffect(() => {
+        handleGetFaculties()
+        handleGetSpecs()
+    }, []);
+
+    useEffect(() => {
+        if(userId !== "") {
+            handleGetApps()
+        }
+    }, [userId]);
+
     return(
         <>
         <AppsContentWrapper>
         <Container fluid className="px-0">
-            {temp.map((element, index) => (
+            {apps.map((element, index) => (
                 <div key={index}>
                 <Row className="p-4" onClick={()=>test(index)}>
-                    <Col className="text-start"><b>{element.course}</b></Col>
-                    <Col className="text-center">{element.department}</Col>
-                    <Col className="text-end vertical-align-middle">{
-                        element.status === "Zaakceptowano" ? 
-                            <><StatusIcon background={Green} disabled>
-                                <OkIcon />
-                            </StatusIcon>
-                            {element.status}</>
-                        : (
-                            element.status === "Odrzucono" ?
-                                <><StatusIcon background={Raspberry} disabled>
-                                    <NoIcon />
-                                </StatusIcon>
-                                {element.status}</>
-                            :
-                            <><StatusIcon background={Blue} disabled>
-                                <OkIcon />
-                            </StatusIcon>
-                            {element.status}</>
-                        )
-                    }</Col>
+                    <Col className="text-start"><b>{element.specializationName}</b></Col>
+                    <Col className="text-center">-</Col>
+                    <Col className="text-end vertical-align-middle"><ApplicationStatusIcon status={element.status} /></Col>
                 </Row>
-                {temp.length > index + 1 ? <Separator /> : null}
+                {apps.length > index + 1 ? <Separator /> : null}
                 </div>
             ))}
         </Container>
@@ -70,6 +91,15 @@ export default function Applications() {
         <ButtonWrapper>
             <Button className="btn-primary btn-lg" onClick={handleClick}>Nowe podanie</Button>
         </ButtonWrapper>
+
+        <ApplicationModal
+            show={isModalActive}
+            onHide={() => setIsModalActive(false)}
+            faculties={faculties}
+            specs={specs}
+            recruitmentData={recruitmentData}
+            handleGetApps={handleGetApps}
+        />
         </>
     );
 }

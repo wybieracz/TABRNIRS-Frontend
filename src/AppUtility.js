@@ -28,7 +28,6 @@ async function getRecruitmentDataRequest(recruitmentData, setRecruitmentData) {
                     return element;
                 });
                 setRecruitmentData(temp)
-                console.log(temp)
             }
         );
     } catch (error) {

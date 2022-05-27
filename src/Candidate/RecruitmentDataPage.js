@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ContentWrapper } from './PersonalDataPageStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 import LoadingIcon from "../Graphic/Load_White.png";
@@ -96,7 +96,6 @@ export default function RecruitmentData({ userId, recruitmentData, setRecruitmen
 
             Promise.all(arr)
                 .then((values) => {
-                    console.log(values)
                     setRecruitmentData(data)
                     setIsRequestSent(false)
                     alert("Poprawnie zapisano wyniki!")}
@@ -108,6 +107,10 @@ export default function RecruitmentData({ userId, recruitmentData, setRecruitmen
                 );
         } 
     }
+
+    useEffect(() => {
+        if(recruitmentData) setData(recruitmentData)
+    }, [recruitmentData])
 
     return(
         <ContentWrapper>

@@ -19,7 +19,7 @@ function App() {
 
   useEffect(() => {
     if(userId !== "") getSubjects(setRecruitmentData)
-    //else getUserId(setUserId)
+    else getUserId(setUserId)
   }, [userId]);
 
   return (
@@ -53,7 +53,7 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <Applications />
+              <Applications userId={userId} recruitmentData={recruitmentData} />
             </>
           }
         />

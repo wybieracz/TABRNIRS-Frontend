@@ -35,4 +35,10 @@ overflow: hidden;
 margin: 0px 10px 0px 5px;
 `;
 
-export { AppsContentWrapper, ButtonWrapper, Separator, StatusIcon }
+const ModalButtonWrapper = styled.div`
+align-items: center;
+justify-content: center;
+width: 100%;
+`;
+
+export { AppsContentWrapper, ButtonWrapper, Separator, StatusIcon, ModalButtonWrapper }
