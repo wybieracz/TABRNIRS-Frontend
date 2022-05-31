@@ -47,7 +47,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
             .filter(element => { return element.facultyName === data.faculty }))
             .map(element => { return element.specializationName }
         );
-        temp.unshift("")
+        //temp.unshift("")
         return temp;
     }
 
@@ -57,7 +57,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
             .filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }))
             .map(element => { return element.baseSubject.subject }
         );
-        temp.unshift("")
+        //temp.unshift("")
         return temp;
     }
 
@@ -81,7 +81,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
         let temp = (specs.filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }));
         if(temp[0]) temp = temp[0].additionalSubjects.map(element => { return element.subject })
-        temp.unshift("")
+        //temp.unshift("")
 
         return temp;
     }
@@ -136,9 +136,9 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         onChange={(e) => setData({...data, "faculty": e.target.value})}
                     >
                         <option value=""></option>
-                        {faculties.map((element, index) => (
+                        {(faculties.length > 0) ? faculties.map((element, index) => (
                             <option value={element} key={index}>{element}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -149,9 +149,10 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         onChange={(e) => setData({...data, "specialization": e.target.value})}
                         disabled={!data.faculty}
                     >
-                        {specializations.map((element, index) => (
+                        <option value=""></option>
+                        {(specializations.length > 0) ? specializations.map((element, index) => (
                             <option value={element} key={index}>{element}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -162,9 +163,10 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         onChange={(e) => setData({...data, "baseSubject": e.target.value})}
                         disabled={!data.specialization}
                     >
-                        {baseSubjects.map((element, index) => (
+                        <option value=""></option>
+                        {(baseSubjects.length > 0) ? baseSubjects.map((element, index) => (
                             <option value={element} key={index}>{element}{element ? ` - ${getBaseSubjectPoints(element)}%` : null}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -175,9 +177,10 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         onChange={(e) => setData({...data, "subject": e.target.value})}
                         disabled={!data.specialization}
                     >
-                        {subjects.map((element, index) => (
+                        <option value=""></option>
+                        {(subjects.length > 0) ? subjects.map((element, index) => (
                             <option value={element} key={index}>{element}{element ? ` - ${getSubjectPoints(element)}%` : null}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 

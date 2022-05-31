@@ -36,7 +36,7 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
 
     return(
         <>
-        <AppsContentWrapper>
+        {(apps.length > 0) ? <AppsContentWrapper>
         <Container fluid className="px-0">
             {apps.map((element, index) => (
                 <div key={index}>
@@ -49,7 +49,7 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
                 </div>
             ))}
         </Container>
-        </AppsContentWrapper>
+        </AppsContentWrapper> : null}
         <ButtonWrapper>
             <Button className="btn-primary btn-lg" onClick={handleClick}>Nowe podanie</Button>
         </ButtonWrapper>
