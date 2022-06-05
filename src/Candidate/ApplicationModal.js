@@ -10,7 +10,6 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
     const [isRequestSent, setIsRequestSent] = useState(false);
     const [data, setData] = useState(defaultApplicationData);
-    //const [faculties, setFaculties] = useState
     const [specializations, setSpecializations] = useState([""]);
     const [baseSubjects, setBaseSubjects] = useState([""]);
     const [subjects, setSubjects] = useState([""]);
@@ -47,7 +46,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
             .filter(element => { return element.facultyName === data.faculty }))
             .map(element => { return element.specializationName }
         );
-        //temp.unshift("")
+
         return temp;
     }
 
@@ -57,7 +56,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
             .filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }))
             .map(element => { return element.baseSubject.subject }
         );
-        //temp.unshift("")
+
         return temp;
     }
 
@@ -81,7 +80,6 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
         let temp = (specs.filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }));
         if(temp[0]) temp = temp[0].additionalSubjects.map(element => { return element.subject })
-        //temp.unshift("")
 
         return temp;
     }

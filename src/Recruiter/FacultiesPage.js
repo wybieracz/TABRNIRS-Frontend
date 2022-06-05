@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { ContentWrapper } from './FacultiesPageStyled';
 import { Button, Row, Col, Form } from 'react-bootstrap';
-import LoadingIcon from "../Graphic/Load_White.png";
-import { LoadingIconWrapper, ButtonIconWrapper } from "../Graphic/IconsStyled";
+import FacultyModal from "./FacultiesModal";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
@@ -10,57 +9,53 @@ axios.defaults.withCredentials = true;
 export default function Faculties({ userId, faculties, setFaculties }) {
 
     const [faculty, setFaculty] = useState("");
+    const [deleteFaculty, setDeleteFaculty] = useState("");
     const [isInputActive, setIsInputActive] = useState(true);
+    const [isModalActive, setIsModalActive] = useState(false);
 
     async function handlePostFaculty() {
 
-        const payload = {
-            "name": faculty,
-            "recruiterId": userId
+        if(faculty) {
+            const payload = {
+                "name": faculty,
+                "recruiterId": userId
+            }
+    
+            setIsInputActive(false)
+    
+            try {
+    
+                await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/faculty", payload).then(
+                    response => {
+    
+                        let temp = faculties;
+                        temp.push(faculty)
+                        temp.sort()
+    
+                        alert("Pomyślnie dodano nowy wydział!")
+                        setFaculties(temp)
+                        setFaculty("")
+                        setIsInputActive(true)
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+                alert("Coś poszło nie tak :(")
+                setIsInputActive(true)
+            }
         }
-
-        setIsInputActive(false)
-
-        try {
-            await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/faculty", payload).then(
-                response => {
-
-                    let temp = faculties;
-                    temp.push(faculty)
-                    temp.sort()
-
-                    alert("Pomyślnie dodano nowy wydział!")
-                    setFaculties(temp)
-                    setFaculty("")
-                    setIsInputActive(true)
-                }
-            );
-        } catch (error) {
-            console.error(error);
-            alert("Coś poszło nie tak :(")
-            setIsInputActive(true)
-        }
+        else {
+            alert("Podaj nazwę wydziału!")
+        }      
     }
 
-    async function handleDeleteFaculty(name) {
-
-        try {
-            await axios.delete(`https://dev-tabrnirs-be-app.azurewebsites.net/faculty/${name}`).then(
-                response => {
-
-                    const temp = faculties.filter(element => element !== name)
-
-                    alert("Usunięto wydział!")
-                    setFaculties(temp)
-                }
-            );
-        } catch (error) {
-            console.error(error);
-            alert("Coś poszło nie tak :(")
-        }
+    function handleOpenModal(name) {
+        setDeleteFaculty(name)
+        setIsModalActive(true)
     }
 
     return(
+        <>
         <ContentWrapper>
         <Form.Group className="d-grid gap-4">
 
@@ -68,7 +63,7 @@ export default function Faculties({ userId, faculties, setFaculties }) {
                 return(
                     <Row key={index}>
                         <Col md="auto">
-                            <Button variant="danger" onClick={() => handleDeleteFaculty(element)}>Usuń</Button>
+                            <Button variant="danger" onClick={() => handleOpenModal(element)}>Usuń</Button>
                         </Col>
 
                         <Col md={10}>
@@ -108,5 +103,14 @@ export default function Faculties({ userId, faculties, setFaculties }) {
 
         </Form.Group>
         </ContentWrapper>
+
+        <FacultyModal 
+        show={isModalActive}
+        onHide={() => setIsModalActive(false)}
+        faculty={deleteFaculty}
+        faculties={faculties}
+        setFaculties={setFaculties}
+        />
+        </>
     );
 }
