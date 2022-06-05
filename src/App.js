@@ -12,12 +12,20 @@ import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
 import RecruiterLoginPage from "./Authorization/Login/RecruiterLoginPage";
 import Faculties from "./Recruiter/FacultiesPage";
+import Majors from "./Recruiter/MajorsPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
 import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
-import { getSubjects, getUserId, getUser, getApps, getFaculties } from "./AppUtility";
+import { defaultSpecsData } from "./DefaultData/DefaultSpecsData";
+import {
+  getSubjects,
+  getUserId,
+  getUser,
+  getApps,
+  getFaculties,
+  getSpecs,
+} from "./AppUtility";
 
 function App() {
-
   const [userId, setUserId] = useState("");
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [personalData, setPersonalData] = useState(defaultPersonalData);
@@ -25,29 +33,24 @@ function App() {
 
   // user
   const [apps, setApps] = useState([]);
-  const [recruitmentData, setRecruitmentData] = useState(defaultRecruitmentData);
+  const [recruitmentData, setRecruitmentData] = useState(
+    defaultRecruitmentData
+  );
 
   // recruiter
 
-
   useEffect(() => {
-
-    if(userId !== "") {
-
-      if(isRecruiter) {
-
-        getUser(setPersonalData)
-      }
-      else {
-
-        getUser(setPersonalData)
-        getSubjects(setRecruitmentData)
-        getApps(setApps)
+    if (userId !== "") {
+      if (isRecruiter) {
+        getUser(setPersonalData);
+      } else {
+        getUser(setPersonalData);
+        getSubjects(setRecruitmentData);
+        getApps(setApps);
       }
 
-      getFaculties(setFaculties)
-    }
-    else getUserId(setUserId)
+      getFaculties(setFaculties);
+    } else getUserId(setUserId);
   }, [userId]);
 
   return (
@@ -61,7 +64,10 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
+              <PersonalData
+                personalData={personalData}
+                setPersonalData={setPersonalData}
+              />
             </>
           }
         />
@@ -71,7 +77,11 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <RecruitmentData userId={userId} recruitmentData={recruitmentData} setRecruitmentData={setRecruitmentData} />
+              <RecruitmentData
+                userId={userId}
+                recruitmentData={recruitmentData}
+                setRecruitmentData={setRecruitmentData}
+              />
             </>
           }
         />
@@ -81,18 +91,38 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <Applications recruitmentData={recruitmentData} apps={apps} handleGetApps={() => getApps(setApps)} faculties={faculties}/>
+              <Applications
+                recruitmentData={recruitmentData}
+                apps={apps}
+                handleGetApps={() => getApps(setApps)}
+                faculties={faculties}
+              />
             </>
           }
         />
-        <Route exact path="/recruiter/login" element={<RecruiterLoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
+        <Route
+          exact
+          path="/recruiter/login"
+          element={
+            <RecruiterLoginPage
+              setUserId={setUserId}
+              setIsRecruiter={setIsRecruiter}
+            />
+          }
+        />
         <Route
           exact
           path="/recruiter/personal-data"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <PersonalData
+                personalData={personalData}
+                setPersonalData={setPersonalData}
+              />
             </>
           }
         />
@@ -101,7 +131,10 @@ function App() {
           path="/recruiter/applications"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
               <BlankPage />
             </>
           }
@@ -111,8 +144,11 @@ function App() {
           path="/recruiter/majors"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <BlankPage />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <Majors userId={userId} faculties={faculties} />
             </>
           }
         />
@@ -121,8 +157,15 @@ function App() {
           path="/recruiter/faculties"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <Faculties userId={userId} faculties={faculties} setFaculties={setFaculties} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <Faculties
+                userId={userId}
+                faculties={faculties}
+                setFaculties={setFaculties}
+              />
             </>
           }
         />
