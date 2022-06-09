@@ -22,6 +22,9 @@ function LoginPage({ setUserId }) {
   }
 
   async function handleLogin() {
+
+    let isAdmin = false;
+
     setRequestSent(true);
     try {
       await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials)
@@ -33,11 +36,22 @@ function LoginPage({ setUserId }) {
     }
     
     try {
-      await axios
-      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
+      await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
       .then((response) => {
         setUserId(response.data);
-        navigate("/candidate/personal-data");
+      });
+    } catch (error) {
+      console.error(error);
+      setRequestSent(false);
+      navigate("/");
+    }
+
+    try {
+      await axios
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
+      .then((response) => {
+        isAdmin = response.data;
+        isAdmin ? navigate("/recruiter/personal-data") : navigate("/candidate/personal-data");
         setRequestSent(false);
       });
     } catch (error) {
