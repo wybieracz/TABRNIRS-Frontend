@@ -1,14 +1,18 @@
 import axios from "axios";
 
-async function getSubjects(setRecruitmentData) {
+async function getSubjects(isRecruiter, setSubjects, setRecruitmentData) {
   try {
     await axios
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
       .then((response) => {
-        const temp = response.data.map(function (element) {
-          return { active: false, subject: element, points: 0 };
-        });
-        getRecruitmentData(temp, setRecruitmentData);
+        if(isRecruiter) {
+          setSubjects(response.data)
+        } else {
+          const temp = response.data.map(function (element) {
+            return { active: false, subject: element, points: 0 };
+          });
+          getRecruitmentData(temp, setRecruitmentData);
+        }
       });
   } catch (error) {
     console.error(error);
@@ -99,30 +103,16 @@ async function getFaculties(setFaculties) {
   }
 }
 
-async function getSpecs(setSpecs, faculties) {
-  try {
-    const facultySpecs = await Promise.all(
-      faculties.map((faculty) => {
-        return axios.get(
-          `https://dev-tabrnirs-be-app.azurewebsites.net/faculty/specs/${faculty}`
+async function getSpecializations(setSpecs) {
+    try {
+        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/specs/subjects").then(
+            response => {
+              setSpecs(response.data)
+            }
         );
-      })
-    );
-
-    facultySpecs.map((faculty) => {
-      const specsArray = [];
-      if (faculty.data.length === 0) {
-        specsArray.push("Brak kierunków do wyświetlenia");
-      } else {
-        faculty.data.map((facultySpecs) => {
-          specsArray.push(facultySpecs.specializationName);
-        });
-      }
-      setSpecs((specs) => [...specs, specsArray]);
-    });
-  } catch (error) {
-    console.error(error);
-  }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-export { getSubjects, getUserId, getUser, getApps, getFaculties, getSpecs };
+export { getSubjects, getUserId, getUser, getApps, getFaculties, getSpecializations };

@@ -10,70 +10,77 @@ import MajorModal from "./MajorModal";
 
 axios.defaults.withCredentials = true;
 
-export default function Majors({ userId, faculties }) {
-  const [subjects, setSubjects] = useState([]);
-  const [specs, setSpecs] = useState([]);
+export default function Majors({ userId, faculties, specializations, subjects }) {
+  //const [subjects, setSubjects] = useState([]);
+  //const [specs, setSpecs] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
+  // useEffect(() => {
+  //   const exec = async () => {
+  //     const facultySpecs = await Promise.all(
+  //       faculties.map((faculty) => {
+  //         console.log(faculty);
+  //         return axios.get(
+  //           `https://dev-tabrnirs-be-app.azurewebsites.net/faculty/specs/${faculty}`
+  //         );
+  //       })
+  //     );
 
-  useEffect(() => {
-    const exec = async () => {
-      const facultySpecs = await Promise.all(
-        faculties.map((faculty) => {
-          console.log(faculty);
-          return axios.get(
-            `https://dev-tabrnirs-be-app.azurewebsites.net/faculty/specs/${faculty}`
-          );
-        })
-      );
-
-      facultySpecs.map((faculty) => {
-        const specsArray = [];
-        if (faculty.data.length === 0) {
-          specsArray.push("Brak kierunków do wyświetlenia");
-        } else {
-          faculty.data.map((facultySpecs) => {
-            console.log(facultySpecs.specializationName);
-            specsArray.push(facultySpecs.specializationName);
-          });
-        }
-        setSpecs((specs) => [...specs, specsArray]);
-      });
-    };
-    exec();
-  }, [faculties]);
+  //     facultySpecs.map((faculty) => {
+  //       const specsArray = [];
+  //       if (faculty.data.length === 0) {
+  //         specsArray.push("Brak kierunków do wyświetlenia");
+  //       } else {
+  //         faculty.data.map((facultySpecs) => {
+  //           console.log(facultySpecs.specializationName);
+  //           specsArray.push(facultySpecs.specializationName);
+  //         });
+  //       }
+  //       setSpecs((specs) => [...specs, specsArray]);
+  //     });
+  //   };
+  //   exec();
+  // }, [faculties]);
 
   function handleClick() {
     setIsModalActive(true);
   }
 
-  async function handleGetSubjects() {
-    try {
-      await axios
-        .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
-        .then((response) => {
-          setSubjects(response.data);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async function handleGetSubjects() {
+  //   try {
+  //     await axios
+  //       .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
+  //       .then((response) => {
+  //         setSubjects(response.data);
+  //       });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
-  useEffect(() => {
-    handleGetSubjects();
-  }, []);
+  // useEffect(() => {
+  //   handleGetSubjects();
+  // }, []);
 
   return (
     <ContentWrapper>
-      <p className="fw-bold text-start fs-4">Wydziały</p>
+      <p className="fw-bold text-start fs-4">Kierunki</p>
       <Accordion>
         {faculties.map((element, index) => {
           return (
-            <Accordion.Item eventKey={index}>
+            <Accordion.Item key={index} eventKey={index}>
               <Accordion.Header>{element}</Accordion.Header>
               <Accordion.Body>
-                {/*{specs[index].map((specs) => (
-                  <div>{specs}</div>
-                ))}*/}
+                {specializations.length === 0 ?
+                  <div>Brak przedmiotów</div>
+                : 
+                  specializations.map((subElement, subIndex) => {
+                    return (
+                      element === subElement.facultyName ?
+                        <div key={subIndex}>{subElement.specializationName}</div>
+                      :
+                        null
+                    )
+                })}
               </Accordion.Body>
             </Accordion.Item>
           );
@@ -82,7 +89,6 @@ export default function Majors({ userId, faculties }) {
       <Button className="mt-4" onClick={handleClick}>
         Dodaj kierunek
       </Button>
-      {console.log(subjects)}
       <MajorModal
         show={isModalActive}
         onHide={() => setIsModalActive(false)}

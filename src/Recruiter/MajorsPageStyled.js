@@ -10,4 +10,10 @@ const ContentWrapper = styled.div`
   justify-content: center;
 `;
 
-export { ContentWrapper };
+const RatioWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around
+`;
+
+export { ContentWrapper, RatioWrapper };

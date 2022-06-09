@@ -15,42 +15,41 @@ import Faculties from "./Recruiter/FacultiesPage";
 import Majors from "./Recruiter/MajorsPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
 import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
-import { defaultSpecsData } from "./DefaultData/DefaultSpecsData";
 import {
   getSubjects,
   getUserId,
   getUser,
   getApps,
   getFaculties,
-  getSpecs,
+  getSpecializations,
 } from "./AppUtility";
 
 function App() {
   const [userId, setUserId] = useState("");
-  const [isRecruiter, setIsRecruiter] = useState(false);
+  const [isRecruiter, setIsRecruiter] = useState(true);
   const [personalData, setPersonalData] = useState(defaultPersonalData);
   const [faculties, setFaculties] = useState([]);
+  const [specializations, setSpecializations] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
   // user
   const [apps, setApps] = useState([]);
-  const [recruitmentData, setRecruitmentData] = useState(
-    defaultRecruitmentData
-  );
+  const [recruitmentData, setRecruitmentData] = useState(defaultRecruitmentData);
 
   // recruiter
 
   useEffect(() => {
     if (userId !== "") {
       if (isRecruiter) {
-        getUser(setPersonalData);
+        getUser(setPersonalData)
+        getSpecializations(setSpecializations)
       } else {
-        getUser(setPersonalData);
-        getSubjects(setRecruitmentData);
-        getApps(setApps);
+        getUser(setPersonalData)
+        getApps(setApps)
       }
-
-      getFaculties(setFaculties);
-    } else getUserId(setUserId);
+      getSubjects(isRecruiter, setSubjects, setRecruitmentData)
+      getFaculties(setFaculties)
+    } else getUserId(setUserId)
   }, [userId]);
 
   return (
@@ -148,7 +147,12 @@ function App() {
                 setUserId={setUserId}
                 setIsRecruiter={setIsRecruiter}
               />
-              <Majors userId={userId} faculties={faculties} />
+              <Majors
+                userId={userId}
+                faculties={faculties}
+                specializations={specializations}
+                subjects={subjects}
+              />
             </>
           }
         />
