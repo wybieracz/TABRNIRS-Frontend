@@ -10,7 +10,7 @@ import MajorModal from "./MajorModal";
 
 axios.defaults.withCredentials = true;
 
-export default function Majors({ userId, faculties, specializations, subjects }) {
+export default function Majors({ userId, faculties, specializations, subjects, handleGetSubjects }) {
   //const [subjects, setSubjects] = useState([]);
   //const [specs, setSpecs] = useState([]);
   const [isModalActive, setIsModalActive] = useState(false);
@@ -94,6 +94,7 @@ export default function Majors({ userId, faculties, specializations, subjects })
         onHide={() => setIsModalActive(false)}
         faculties={faculties}
         subjects={subjects}
+        handleGetSubjects={handleGetSubjects}
       />
     </ContentWrapper>
   );

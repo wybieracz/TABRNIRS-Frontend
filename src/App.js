@@ -152,6 +152,7 @@ function App() {
                 faculties={faculties}
                 specializations={specializations}
                 subjects={subjects}
+                handleGetSubjects={() => getSpecializations(setSpecializations)}
               />
             </>
           }

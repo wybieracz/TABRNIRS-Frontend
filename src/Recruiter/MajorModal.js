@@ -4,16 +4,62 @@ import { defaultMajorData } from "../DefaultData/DefaultMajorData";
 import { ButtonIconWrapper, LoadingIconWrapper } from "../Graphic/IconsStyled";
 import LoadingIcon from "../Graphic/Load_White.png";
 import "../BootstrapCustom.css";
-import { defaultDate, getDays, years, months, hours, minutes } from "../DefaultData/DefaultDate";
+import { defaultDate, getDays, getMonthNumber, years, months, hours, minutes } from "../DefaultData/DefaultDate";
 import { RatioWrapper } from "./MajorsPageStyled";
 import axios from "axios";
 
-export default function MajorModal({ show, onHide, faculties, subjects }) {
+export default function MajorModal({ show, onHide, faculties, subjects, handleGetSubjects }) {
+
   const [isRequestSent, setIsRequestSent] = useState(false);
   const [data, setData] = useState(defaultMajorData);
   const [date, setDate] = useState(defaultDate);
   const [days, setDays] = useState(getDays("1", "2022"));
   const [ratio, setRatio] = useState(0.5);
+  const [subjectsReduced, setSubjectsReduced] = useState(getSubjectsReduced())
+
+  function getSubjectsReduced() {
+    return subjects.reduce((reduced, element) => {
+      if(element.includes("PR")) {
+        reduced.push({subject: element, active: false})
+      }
+      return reduced;
+    }, [])
+  }
+
+  function getSubjectsActive() {
+    return subjectsReduced.reduce((reduced, element) => {
+      if(element.active) {
+        reduced.push(element.subject)
+      }
+      return reduced;
+    }, [])
+  }
+
+  function getActiveNumber() {
+    let count = 0;
+    subjectsReduced.forEach(element => {
+      if(element.active) count++
+    })
+    return count;
+  }
+
+  function setActive(index, active, subject) {
+
+    const editedElement = {subject: subject, "active": active};
+    const result = Array.from(subjectsReduced);
+
+    result.splice(index, 1, editedElement)
+    setSubjectsReduced(result)
+}
+
+  function onHideExtended() {
+    onHide()
+    setData(defaultMajorData)
+    setDate(defaultDate)
+    setDays(getDays("1", "2022"))
+    setRatio(0.5)
+    setSubjectsReduced(getSubjectsReduced())
+  }
 
   function countPR() {
     const temp = subjects.filter(element => element.includes("PR"));
@@ -21,45 +67,69 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
   }
 
   async function handlePostApp() {
+
+    let specialization;
+    const count = getActiveNumber();
+    const activeSubjects = getSubjectsActive();
+    const arr = Array(count);
+
     const payload = {
-      specializationName: data.specializationName,
-      facultyName: data.facultyName,
-      basePointReq: data.basePointReq,
-      baseSubject: {
-        subject: data.baseSubject.subject,
-      },
-      formula: data.formula,
-      spotCount: data.spotCount,
-      recruitationDate: data.recruitationDate,
+      ...data,
+      formula: `${ratio} * PB + ${1 - ratio} * PD`,
+      recruitationDate: `${date.year}-${getMonthNumber(date.month)}-${date.day}T${date.hour}:${date.minutes}:00.000Z`
     };
 
-    setIsRequestSent(true);
+    setIsRequestSent(true)
     try {
+      
+      await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/spec", payload)
+
       await axios
-        .post("https://dev-tabrnirs-be-app.azurewebsites.net/spec", payload)
-        .then((response) => {
-          //handleGetApps();
-          onHide();
-          alert("Pomyślnie dodano nowy kierunek!");
-          setIsRequestSent(false);
-        });
+      .get(`https://dev-tabrnirs-be-app.azurewebsites.net//faculty/specs/${payload.facultyName}`)
+      .then((response) => {
+        specialization = response.data.find(element => element.specializationName === payload.specializationName)
+      })
+
+      for(let i = 0; i < count; i++) {
+
+        const subjectPayload = {
+          specializationId: specialization.specializationId,
+          specializationName: specialization.specializationName,
+          subject: activeSubjects[i]
+        }
+
+        arr[i] = axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/spec/subj", subjectPayload);
+      }
+
+        Promise.all(arr)
+          .then((values) => {
+            setIsRequestSent(false)
+            handleGetSubjects()
+            onHideExtended()
+            alert("Poprawnie dodano nowy kierunek!")}
+          )
+          .catch((values) => {
+            console.error(values)
+            onHideExtended();
+            setIsRequestSent(false)
+            alert("Coś poszło nie tak :(")}
+          );
     } catch (error) {
       console.error(error);
-      onHide();
+      onHideExtended();
       alert("Coś poszło nie tak :(");
       setIsRequestSent(false);
     }
-  }
-
-  function onHideExtended() {
-    onHide();
-    setData({ ...data, faculty: "" });
   }
 
   useEffect(() => {
     setDays(getDays(date.month, date.year));
     if(!days.includes(date.day)) setDate({ ...date, day: "1" })
   }, [date.month, date.year, days]);
+
+  useEffect(() => {
+    setSubjectsReduced(getSubjectsReduced())
+  }, [subjects])
 
   return (
     <Modal
@@ -83,8 +153,8 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
           <Form.Group size="lg" controlId="facultyName">
             <Form.Label>Wydział</Form.Label>
             <Form.Select
-              value={data.faculty}
-              onChange={(e) => setData({ ...data, faculty: e.target.value })}
+              value={data.facultyName}
+              onChange={(e) => setData({ ...data, facultyName: e.target.value })}
             >
               <option value=""></option>
               {faculties.map((element, index) => (
@@ -101,10 +171,7 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
               type="text"
               value={data.specializationName}
               onChange={(e) =>
-                setData({
-                  ...data,
-                  specializationName: `${e.target.value}`,
-                })
+                setData({ ...data, specializationName: e.target.value })
               }
             />
           </Form.Group>
@@ -133,16 +200,15 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
             <Row>
               <Col>
                 <Container>
-                  {subjects
-                  .filter(element => element.includes("PR"))
+                  {subjectsReduced
                   .slice(0, Math.ceil(countPR() / 2))
                   .map((element, index) => (
                       <Form.Check className="mt-2"
                       key={index}
                       aria-label="option 1"
-                      label={element}
+                      label={element.subject}
                       checked={element.active}
-                      onChange={(e) => console.log(index)}
+                      onChange={(e) => setActive(index, e.target.checked, element.subject)}
                       />
                   ))}
                 </Container>
@@ -150,16 +216,15 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
 
               <Col>
                 <Container >
-                  {subjects
-                  .filter(element => element.includes("PR"))
-                  .slice(-(Math.ceil(countPR() / 2)))
+                  {subjectsReduced
+                  .slice(-(Math.floor(countPR() / 2)))
                   .map((element, index) => (
                       <Form.Check className="mt-2"
                       key={index}
                       aria-label="option 1"
-                      label={element}
+                      label={element.subject}
                       checked={element.active}
-                      onChange={(e) => console.log(index + countPR() / 2)}
+                      onChange={(e) => setActive(index + countPR() / 2, e.target.checked, element.subject)}
                       />
                   ))}
                 </Container>
@@ -189,7 +254,7 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
                   onChange={(e) =>
                     setData({
                       ...data,
-                      basePointReq: `${e.target.value}`,
+                      basePointReq: parseInt(e.target.value),
                     })
                   }
                 />
@@ -207,7 +272,7 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
                   onChange={(e) =>
                     setData({
                       ...data,
-                      spotCount: `${e.target.value}`,
+                      spotCount: parseInt(e.target.value),
                     })
                   }
                 />
@@ -311,7 +376,7 @@ export default function MajorModal({ show, onHide, faculties, subjects }) {
       </Modal.Body>
 
       <Modal.Footer className="d-grid gap-4">
-        <Button className="mx-7" variant="primary" onClick={() => console.log(date)}>
+        <Button className="mx-7" variant="primary" onClick={handlePostApp}>
           {isRequestSent ? (
             <ButtonIconWrapper>
               <LoadingIconWrapper size="20px">

@@ -105,7 +105,7 @@ async function getFaculties(setFaculties) {
 
 async function getSpecializations(setSpecs) {
     try {
-        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/specs/subjects").then(
+        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/spec").then(
             response => {
               setSpecs(response.data)
             }
