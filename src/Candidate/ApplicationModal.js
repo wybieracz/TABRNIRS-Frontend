@@ -17,7 +17,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
     async function handlePostApp() {
 
         const payload = {
-            "specializationName": data.specialization,
+            "specializationId": data.specializationId,
             "chosenSubject1": data.baseSubject,
             "chosenSubject2": data.subject
         }
@@ -40,20 +40,17 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
         }
     }
 
+    console.log(specs)
+
     function getSpecializations() {
 
-        const temp = (specs
-            .filter(element => { return element.facultyName === data.faculty }))
-            .map(element => { return element.specializationName }
-        );
-
-        return temp;
+        return specs.filter(element => { return element.facultyName === data.faculty })
     }
 
     function getBaseSubject() {
 
         const temp = (specs
-            .filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }))
+            .filter(element => { return element.specializationId === data.specializationId }))
             .map(element => { return element.baseSubject.subject }
         );
 
@@ -78,7 +75,11 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
     function getSubjects() {
 
-        let temp = (specs.filter(element => { return element.facultyName === data.faculty && element.specializationName === data.specialization }));
+        let temp = specs.filter(
+            element => { 
+                return element.specializationId === data.specializationId
+            });
+
         if(temp[0]) temp = temp[0].additionalSubjects.map(element => { return element.subject })
 
         return temp;
@@ -91,14 +92,14 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
     useEffect(() => {
         setSpecializations(getSpecializations())
-        if(!data.faculty) setData({...data, specialization: ""})
+        if(!data.faculty) setData({...data, specializationId: ""})
     }, [data.faculty])
 
     useEffect(() => {
         setBaseSubjects(getBaseSubject())
         setSubjects(getSubjects())
-        if(!data.specializationName) setData({...data, baseSubject: "", subject: ""})
-    }, [data.specialization])
+        if(!data.specializationId) setData({...data, baseSubject: "", subject: ""})
+    }, [data.specializationId])
 
     useEffect(() => {
         setData({...data, baseSubjectPoints: getBaseSubjectPoints(data.baseSubject)})
@@ -143,13 +144,16 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                 <Form.Group size="lg" controlId="specializationName">
                     <Form.Label>Kierunek</Form.Label>
                     <Form.Select
-                        value={data.specialization}
-                        onChange={(e) => setData({...data, "specialization": e.target.value})}
+                        value={data.specializationId}
+                        onChange={(e) => setData({
+                            ...data,
+                            "specializationId": e.target.value
+                        })}
                         disabled={!data.faculty}
                     >
                         <option value=""></option>
                         {(specializations.length > 0) ? specializations.map((element, index) => (
-                            <option value={element} key={index}>{element}</option>
+                            <option value={element.specializationId} key={index}>{element.specializationName}</option>
                         )) : null}
                     </Form.Select>
                 </Form.Group>
@@ -159,7 +163,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                     <Form.Select
                         value={data.baseSubject}
                         onChange={(e) => setData({...data, "baseSubject": e.target.value})}
-                        disabled={!data.specialization}
+                        disabled={!data.specializationId}
                     >
                         <option value=""></option>
                         {(baseSubjects.length > 0) ? baseSubjects.map((element, index) => (
@@ -173,7 +177,7 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                     <Form.Select
                         value={data.subject}
                         onChange={(e) => setData({...data, "subject": e.target.value})}
-                        disabled={!data.specialization}
+                        disabled={!data.specializationId}
                     >
                         <option value=""></option>
                         {(subjects.length > 0) ? subjects.map((element, index) => (

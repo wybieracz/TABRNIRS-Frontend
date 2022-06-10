@@ -1,6 +1,7 @@
 const defaultApplicationData = {
+    "specializationId": "",
     "faculty": "",
-    "specialization": "",
+    "specializationName": "",
     "baseSubject": "",
     "baseSubjectPoints": 0,
     "subject": "",

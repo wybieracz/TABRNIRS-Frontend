@@ -16,7 +16,7 @@ export default function RecruiterNavBar({ setUserId, setIsRecruiter }) {
                 response => {
                     setIsRecruiter(false)
                     setUserId("")
-                    navigate("/recruiter/login")
+                    navigate("/")
                 }
             );
         } catch (error) {

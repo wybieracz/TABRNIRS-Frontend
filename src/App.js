@@ -10,18 +10,27 @@ import RecruiterNavBar from "./NavBars/RecruiterNavBar";
 import PersonalData from "./Candidate/PersonalDataPage";
 import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
-import RecruiterLoginPage from "./Authorization/Login/RecruiterLoginPage";
 import Faculties from "./Recruiter/FacultiesPage";
+import Majors from "./Recruiter/MajorsPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";
 import { defaultPersonalData } from "./DefaultData/DefaultPersonalData";
-import { getSubjects, getUserId, getUser, getApps, getFaculties } from "./AppUtility";
+import {
+  getSubjects,
+  getUserId,
+  getUser,
+  getApps,
+  getFaculties,
+  getSpecializations,
+  getIsRecruiter
+} from "./AppUtility";
 
 function App() {
-
   const [userId, setUserId] = useState("");
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [personalData, setPersonalData] = useState(defaultPersonalData);
   const [faculties, setFaculties] = useState([]);
+  const [specializations, setSpecializations] = useState([]);
+  const [subjects, setSubjects] = useState([]);
 
   // user
   const [apps, setApps] = useState([]);
@@ -29,31 +38,27 @@ function App() {
 
   // recruiter
 
-
   useEffect(() => {
-
-    if(userId !== "") {
-
-      if(isRecruiter) {
-
+    if (userId !== "") {
+      if (isRecruiter) {
         getUser(setPersonalData)
-      }
-      else {
-
+      } else {
         getUser(setPersonalData)
-        getSubjects(setRecruitmentData)
         getApps(setApps)
       }
-
+      getSpecializations(setSpecializations)
+      getSubjects(isRecruiter, setSubjects, setRecruitmentData)
       getFaculties(setFaculties)
+    } else {
+      getUserId(setUserId)
+      getIsRecruiter(setIsRecruiter)
     }
-    else getUserId(setUserId)
   }, [userId]);
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<LoginPage setUserId={setUserId} />} />
+        <Route exact path="/" element={<LoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
         <Route exact path="/register" element={<RegisterPage />} />
         <Route
           exact
@@ -61,7 +66,10 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
+              <PersonalData
+                personalData={personalData}
+                setPersonalData={setPersonalData}
+              />
             </>
           }
         />
@@ -71,7 +79,11 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <RecruitmentData userId={userId} recruitmentData={recruitmentData} setRecruitmentData={setRecruitmentData} />
+              <RecruitmentData
+                userId={userId}
+                recruitmentData={recruitmentData}
+                setRecruitmentData={setRecruitmentData}
+              />
             </>
           }
         />
@@ -81,18 +93,29 @@ function App() {
           element={
             <>
               <CandidateNavBar setUserId={setUserId} />
-              <Applications recruitmentData={recruitmentData} apps={apps} handleGetApps={() => getApps(setApps)} faculties={faculties}/>
+              <Applications
+                recruitmentData={recruitmentData}
+                apps={apps}
+                handleGetApps={() => getApps(setApps)}
+                faculties={faculties}
+                specializations={specializations}
+              />
             </>
           }
         />
-        <Route exact path="/recruiter/login" element={<RecruiterLoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
         <Route
           exact
           path="/recruiter/personal-data"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <PersonalData personalData={personalData} setPersonalData={setPersonalData} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <PersonalData
+                personalData={personalData}
+                setPersonalData={setPersonalData}
+              />
             </>
           }
         />
@@ -101,7 +124,10 @@ function App() {
           path="/recruiter/applications"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
               <BlankPage />
             </>
           }
@@ -111,8 +137,17 @@ function App() {
           path="/recruiter/majors"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <BlankPage />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <Majors
+                userId={userId}
+                faculties={faculties}
+                specializations={specializations}
+                subjects={subjects}
+                handleGetSubjects={() => getSpecializations(setSpecializations)}
+              />
             </>
           }
         />
@@ -121,8 +156,15 @@ function App() {
           path="/recruiter/faculties"
           element={
             <>
-              <RecruiterNavBar setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
-              <Faculties userId={userId} faculties={faculties} setFaculties={setFaculties} />
+              <RecruiterNavBar
+                setUserId={setUserId}
+                setIsRecruiter={setIsRecruiter}
+              />
+              <Faculties
+                userId={userId}
+                faculties={faculties}
+                setFaculties={setFaculties}
+              />
             </>
           }
         />

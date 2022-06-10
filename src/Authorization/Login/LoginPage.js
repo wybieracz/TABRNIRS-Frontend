@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-function LoginPage({ setUserId }) {
+function LoginPage({ setUserId, setIsRecruiter }) {
   const [credentials, setCredentials] = useState(defaultCredentails);
   const [isRequestSent, setRequestSent] = useState(false);
   const navigate = useNavigate();
@@ -22,6 +22,9 @@ function LoginPage({ setUserId }) {
   }
 
   async function handleLogin() {
+
+    let isRecruiter = false;
+
     setRequestSent(true);
     try {
       await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/login", credentials)
@@ -33,11 +36,23 @@ function LoginPage({ setUserId }) {
     }
     
     try {
-      await axios
-      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
+      await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/user/id")
       .then((response) => {
         setUserId(response.data);
-        navigate("/candidate/personal-data");
+      });
+    } catch (error) {
+      console.error(error);
+      setRequestSent(false);
+      navigate("/");
+    }
+
+    try {
+      await axios
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
+      .then((response) => {
+        isRecruiter = response.data;
+        setIsRecruiter(isRecruiter)
+        isRecruiter ? navigate("/recruiter/personal-data") : navigate("/candidate/personal-data");
         setRequestSent(false);
       });
     } catch (error) {
