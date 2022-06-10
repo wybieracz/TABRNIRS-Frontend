@@ -9,14 +9,14 @@ function test(num) {
     console.log(num)
 }
 
-export default function Applications({ recruitmentData, apps, handleGetApps, faculties }) {
+export default function Applications({ recruitmentData, apps, handleGetApps, faculties, specializations }) {
 
     const [isModalActive, setIsModalActive] = useState(false);
     const [specs, setSpesc] = useState([]);
     
     async function handleGetSpecs() {
         try {
-            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/specs/subjects").then(
+            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/spec").then(
                 response => {
                     setSpesc(response.data)
                 }
@@ -38,7 +38,7 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
         <>
         <AppsContentWrapper>
         <Container fluid className="px-0">
-            {apps.map((element, index) => (
+        {apps.length ? apps.map((element, index) => (
                 <div key={index}>
                 <Row className="p-4" onClick={()=>test(index)}>
                     <Col className="text-start"><b>{element.specializationName}</b></Col>
@@ -47,7 +47,7 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
                 </Row>
                 {apps.length > index + 1 ? <Separator /> : null}
                 </div>
-            ))}
+            )) : null}
         </Container>
         </AppsContentWrapper>
         <ButtonWrapper>
@@ -58,7 +58,7 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
             show={isModalActive}
             onHide={() => setIsModalActive(false)}
             faculties={faculties}
-            specs={specs}
+            specs={specializations}
             recruitmentData={recruitmentData}
             handleGetApps={handleGetApps}
         />

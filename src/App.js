@@ -22,11 +22,12 @@ import {
   getApps,
   getFaculties,
   getSpecializations,
+  getIsRecruiter
 } from "./AppUtility";
 
 function App() {
   const [userId, setUserId] = useState("");
-  const [isRecruiter, setIsRecruiter] = useState(true);
+  const [isRecruiter, setIsRecruiter] = useState(false);
   const [personalData, setPersonalData] = useState(defaultPersonalData);
   const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
@@ -42,20 +43,23 @@ function App() {
     if (userId !== "") {
       if (isRecruiter) {
         getUser(setPersonalData)
-        getSpecializations(setSpecializations)
       } else {
         getUser(setPersonalData)
         getApps(setApps)
       }
+      getSpecializations(setSpecializations)
       getSubjects(isRecruiter, setSubjects, setRecruitmentData)
       getFaculties(setFaculties)
-    } else getUserId(setUserId)
+    } else {
+      getUserId(setUserId)
+      getIsRecruiter(setIsRecruiter)
+    }
   }, [userId]);
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<LoginPage setUserId={setUserId} />} />
+        <Route exact path="/" element={<LoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
         <Route exact path="/register" element={<RegisterPage />} />
         <Route
           exact
@@ -95,18 +99,9 @@ function App() {
                 apps={apps}
                 handleGetApps={() => getApps(setApps)}
                 faculties={faculties}
+                specializations={specializations}
               />
             </>
-          }
-        />
-        <Route
-          exact
-          path="/recruiter/login"
-          element={
-            <RecruiterLoginPage
-              setUserId={setUserId}
-              setIsRecruiter={setIsRecruiter}
-            />
           }
         />
         <Route

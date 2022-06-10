@@ -68,7 +68,7 @@ export default function MajorModal({ show, onHide, faculties, subjects, handleGe
 
   async function handlePostApp() {
 
-    let specialization;
+    let specialization = {};
     const count = getActiveNumber();
     const activeSubjects = getSubjectsActive();
     const arr = Array(count);

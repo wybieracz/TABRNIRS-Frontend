@@ -115,4 +115,16 @@ async function getSpecializations(setSpecs) {
     }
 }
 
-export { getSubjects, getUserId, getUser, getApps, getFaculties, getSpecializations };
+async function getIsRecruiter(setIsRecruiter) {
+  try {
+    await axios
+    .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
+    .then((response) => {
+      setIsRecruiter(response.data)
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export { getSubjects, getUserId, getUser, getApps, getFaculties, getSpecializations, getIsRecruiter };

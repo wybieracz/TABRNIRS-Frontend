@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-function LoginPage({ setUserId }) {
+function LoginPage({ setUserId, setIsRecruiter }) {
   const [credentials, setCredentials] = useState(defaultCredentails);
   const [isRequestSent, setRequestSent] = useState(false);
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function LoginPage({ setUserId }) {
 
   async function handleLogin() {
 
-    let isAdmin = false;
+    let isRecruiter = false;
 
     setRequestSent(true);
     try {
@@ -50,8 +50,9 @@ function LoginPage({ setUserId }) {
       await axios
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
       .then((response) => {
-        isAdmin = response.data;
-        isAdmin ? navigate("/recruiter/personal-data") : navigate("/candidate/personal-data");
+        isRecruiter = response.data;
+        setIsRecruiter(isRecruiter)
+        isRecruiter ? navigate("/recruiter/personal-data") : navigate("/candidate/personal-data");
         setRequestSent(false);
       });
     } catch (error) {
