@@ -8,14 +8,14 @@ import { defaultDate, getDays, getMonthNumber, years, months, hours, minutes } f
 import { RatioWrapper } from "./MajorsPageStyled";
 import axios from "axios";
 
-export default function MajorModal({ show, onHide, faculties, subjects, handleGetSubjects }) {
+export default function MajorModal({ show, onHide, faculties, subjects, handleGetSpecializations }) {
 
   const [isRequestSent, setIsRequestSent] = useState(false);
   const [data, setData] = useState(defaultMajorData);
   const [date, setDate] = useState(defaultDate);
   const [days, setDays] = useState(getDays("1", "2022"));
   const [ratio, setRatio] = useState(0.5);
-  const [subjectsReduced, setSubjectsReduced] = useState(getSubjectsReduced())
+  const [subjectsReduced, setSubjectsReduced] = useState(getSubjectsReduced());
 
   function getSubjectsReduced() {
     return subjects.reduce((reduced, element) => {
@@ -104,7 +104,7 @@ export default function MajorModal({ show, onHide, faculties, subjects, handleGe
         Promise.all(arr)
           .then((values) => {
             setIsRequestSent(false)
-            handleGetSubjects()
+            handleGetSpecializations()
             onHideExtended()
             alert("Poprawnie dodano nowy kierunek!")}
           )

@@ -5,14 +5,13 @@ async function getSubjects(isRecruiter, setSubjects, setRecruitmentData) {
     await axios
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
       .then((response) => {
-        if(isRecruiter) {
-          setSubjects(response.data)
-        } else {
+        if(!isRecruiter) {
           const temp = response.data.map(function (element) {
             return { active: false, subject: element, points: 0 };
           });
           getRecruitmentData(temp, setRecruitmentData);
         }
+        setSubjects(response.data)
       });
   } catch (error) {
     console.error(error);
