@@ -10,7 +10,6 @@ import RecruiterNavBar from "./NavBars/RecruiterNavBar";
 import PersonalData from "./Candidate/PersonalDataPage";
 import RecruitmentData from "./Candidate/RecruitmentDataPage";
 import Applications from "./Candidate/ApplicationsPage";
-import RecruiterLoginPage from "./Authorization/Login/RecruiterLoginPage";
 import Faculties from "./Recruiter/FacultiesPage";
 import Majors from "./Recruiter/MajorsPage";
 import { defaultRecruitmentData } from "./DefaultData/DefaultRecruitmentData";

@@ -1,65 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ContentWrapper } from "./FacultiesPageStyled";
-import { Button, Row, Col, Form } from "react-bootstrap";
-import LoadingIcon from "../Graphic/Load_White.png";
-import { LoadingIconWrapper, ButtonIconWrapper } from "../Graphic/IconsStyled";
+import { Button } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import axios from "axios";
-import { getSpecs } from "../AppUtility";
 import MajorModal from "./MajorModal";
 
 axios.defaults.withCredentials = true;
 
 export default function Majors({ userId, faculties, specializations, subjects, handleGetSubjects }) {
-  //const [subjects, setSubjects] = useState([]);
-  //const [specs, setSpecs] = useState([]);
-  const [isModalActive, setIsModalActive] = useState(false);
-  // useEffect(() => {
-  //   const exec = async () => {
-  //     const facultySpecs = await Promise.all(
-  //       faculties.map((faculty) => {
-  //         console.log(faculty);
-  //         return axios.get(
-  //           `https://dev-tabrnirs-be-app.azurewebsites.net/faculty/specs/${faculty}`
-  //         );
-  //       })
-  //     );
 
-  //     facultySpecs.map((faculty) => {
-  //       const specsArray = [];
-  //       if (faculty.data.length === 0) {
-  //         specsArray.push("Brak kierunków do wyświetlenia");
-  //       } else {
-  //         faculty.data.map((facultySpecs) => {
-  //           console.log(facultySpecs.specializationName);
-  //           specsArray.push(facultySpecs.specializationName);
-  //         });
-  //       }
-  //       setSpecs((specs) => [...specs, specsArray]);
-  //     });
-  //   };
-  //   exec();
-  // }, [faculties]);
+  const [isModalActive, setIsModalActive] = useState(false);
 
   function handleClick() {
     setIsModalActive(true);
   }
-
-  // async function handleGetSubjects() {
-  //   try {
-  //     await axios
-  //       .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
-  //       .then((response) => {
-  //         setSubjects(response.data);
-  //       });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   handleGetSubjects();
-  // }, []);
 
   return (
     <ContentWrapper>

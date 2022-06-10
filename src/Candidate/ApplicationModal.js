@@ -135,9 +135,9 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         onChange={(e) => setData({...data, "faculty": e.target.value})}
                     >
                         <option value=""></option>
-                        {faculties.map((element, index) => (
+                        {(faculties.length > 0) ? faculties.map((element, index) => (
                             <option value={element} key={index}>{element}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -152,9 +152,9 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         disabled={!data.faculty}
                     >
                         <option value=""></option>
-                        {specializations.map((element, index) => (
+                        {(specializations.length > 0) ? specializations.map((element, index) => (
                             <option value={element.specializationId} key={index}>{element.specializationName}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -166,9 +166,9 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         disabled={!data.specializationId}
                     >
                         <option value=""></option>
-                        {baseSubjects.map((element, index) => (
+                        {(baseSubjects.length > 0) ? baseSubjects.map((element, index) => (
                             <option value={element} key={index}>{element}{element ? ` - ${getBaseSubjectPoints(element)}%` : null}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
@@ -180,9 +180,9 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
                         disabled={!data.specializationId}
                     >
                         <option value=""></option>
-                        {subjects.map((element, index) => (
+                        {(subjects.length > 0) ? subjects.map((element, index) => (
                             <option value={element} key={index}>{element}{element ? ` - ${getSubjectPoints(element)}%` : null}</option>
-                        ))}
+                        )) : null}
                     </Form.Select>
                 </Form.Group>
 
