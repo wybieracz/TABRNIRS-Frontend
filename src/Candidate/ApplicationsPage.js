@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { AppsContentWrapper, ButtonWrapper, Separator } from './ApplicationsPageStyled';
 import ApplicationStatusIcon from './ApplicationStatusIcon';
 import ApplicationModal from './ApplicationModal';
-import axios from 'axios';
 
 function test(num) {
     console.log(num)
@@ -12,27 +11,14 @@ function test(num) {
 export default function Applications({ recruitmentData, apps, handleGetApps, faculties, specializations }) {
 
     const [isModalActive, setIsModalActive] = useState(false);
-    const [specs, setSpesc] = useState([]);
-    
-    async function handleGetSpecs() {
-        try {
-            await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/spec").then(
-                response => {
-                    setSpesc(response.data)
-                }
-            );
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     function handleClick() {
         setIsModalActive(true);
     }
 
-    useEffect(() => {
-        handleGetSpecs()
-    }, []);
+    function getSpecializationData(specializationId) {
+        return specializations.find(element => element.specializationId === specializationId )
+    }
 
     return(
         <>
@@ -41,8 +27,8 @@ export default function Applications({ recruitmentData, apps, handleGetApps, fac
         {apps.length ? apps.map((element, index) => (
                 <div key={index}>
                 <Row className="p-4" onClick={()=>test(index)}>
-                    <Col className="text-start"><b>{element.specializationName}</b></Col>
-                    <Col className="text-center">-</Col>
+                    <Col className="text-start"><b>{getSpecializationData(element.specializationId).specializationName}</b></Col>
+                    <Col className="text-center">{getSpecializationData(element.specializationId).facultyName}</Col>
                     <Col className="text-end vertical-align-middle"><ApplicationStatusIcon status={element.status} /></Col>
                 </Row>
                 {apps.length > index + 1 ? <Separator /> : null}

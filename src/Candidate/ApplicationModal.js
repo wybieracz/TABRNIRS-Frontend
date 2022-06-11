@@ -18,8 +18,8 @@ export default function ApplicationModal({ show, onHide, faculties, specs, recru
 
         const payload = {
             "specializationId": data.specializationId,
-            "chosenSubject1": data.baseSubject,
-            "chosenSubject2": data.subject
+            "baseSubject": data.baseSubject,
+            "chosenSubject": data.subject
         }
 
         setIsRequestSent(true);
