@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Container, Form, Modal, Button, Row, Col } from "react-bootstrap";
-import { defaultMajorData } from "../DefaultData/DefaultMajorData";
-import { ButtonIconWrapper, LoadingIconWrapper } from "../Graphic/IconsStyled";
-import LoadingIcon from "../Graphic/Load_White.png";
-import "../BootstrapCustom.css";
 import { defaultDate, getDays, getMonthNumber, years, months, hours, minutes } from "../DefaultData/DefaultDate";
+import { Container, Form, Modal, Button, Row, Col } from "react-bootstrap";
+import { ButtonIconWrapper, LoadingIconWrapper } from "../Graphic/IconsStyled";
+import { defaultMajorData } from "../DefaultData/DefaultMajorData";
+import LoadingIcon from "../Graphic/Load_White.png";
 import { RatioWrapper } from "./MajorsPageStyled";
+import "../BootstrapCustom.css";
 import axios from "axios";
 
 export default function MajorModal({ show, onHide, faculties, subjects, handleGetSpecializations }) {

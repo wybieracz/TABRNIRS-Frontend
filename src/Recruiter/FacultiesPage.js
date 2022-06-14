@@ -1,116 +1,62 @@
 import React, { useState } from "react";
 import { ContentWrapper } from './FacultiesPageStyled';
-import { Button, Row, Col, Form } from 'react-bootstrap';
-import FacultyModal from "./FacultiesModal";
+import { Button, Accordion } from 'react-bootstrap';
+import FacultyDeleteModal from "./FacultiesDeleteModal";
+import FacultyAddModal from "./FacultiesAddModal";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 export default function Faculties({ userId, faculties, setFaculties }) {
 
-    const [faculty, setFaculty] = useState("");
     const [deleteFaculty, setDeleteFaculty] = useState("");
-    const [isInputActive, setIsInputActive] = useState(true);
-    const [isModalActive, setIsModalActive] = useState(false);
+    const [isDeleteModalActive, setIsDeleteModalActive] = useState(false);
+    const [isAddModalActive, setIsAddModalActive] = useState(false);
 
-    async function handlePostFaculty() {
-
-        if(faculty) {
-            const payload = {
-                "name": faculty,
-                "recruiterId": userId
-            }
-    
-            setIsInputActive(false)
-    
-            try {
-    
-                await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/faculty", payload).then(
-                    response => {
-    
-                        let temp = faculties;
-                        temp.push(faculty)
-                        temp.sort()
-    
-                        alert("Pomyślnie dodano nowy wydział!")
-                        setFaculties(temp)
-                        setFaculty("")
-                        setIsInputActive(true)
-                    }
-                );
-            } catch (error) {
-                console.error(error);
-                alert("Coś poszło nie tak :(")
-                setIsInputActive(true)
-            }
-        }
-        else {
-            alert("Podaj nazwę wydziału!")
-        }      
-    }
-
-    function handleOpenModal(name) {
+    function handleOpenDeleteModal(name) {
         setDeleteFaculty(name)
-        setIsModalActive(true)
+        setIsDeleteModalActive(true)
     }
 
     return(
-        <>
         <ContentWrapper>
-        <Form.Group className="d-grid gap-4">
-
-            {faculties.map((element, index) => {
-                return(
-                    <Row key={index}>
-                        <Col md="auto">
-                            <Button variant="danger" onClick={() => handleOpenModal(element)}>Usuń</Button>
-                        </Col>
-
-                        <Col md={10}>
-                            <Form.Group size="lg" controlId="postalCode">
-                                <Form.Control
-                                type="text"
-                                value={element}
-                                disabled
-                                />
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                )
-            })}
-
-            <Row>
-                <Col md="auto">
-                    <Button variant="success"
-                        onClick={handlePostFaculty}
-                        disabled={!isInputActive}
-                        >
-                        Dodaj
-                    </Button>
-                </Col>
-
-                <Col md={10}>
-                    <Form.Group size="lg" controlId="postalCode">
-                        <Form.Control
-                        type="text"
-                        value={faculty}
-                        onChange={(e) => setFaculty(e.target.value)}
-                        disabled={!isInputActive}
-                        />
-                    </Form.Group>
-                </Col>
-            </Row>
-
-        </Form.Group>
-        </ContentWrapper>
-
-        <FacultyModal 
-        show={isModalActive}
-        onHide={() => setIsModalActive(false)}
-        faculty={deleteFaculty}
-        faculties={faculties}
-        setFaculties={setFaculties}
+        <p className="fw-bold text-start fs-4">Wydziały</p>
+        <Accordion>
+          {faculties.map((element, index) => {
+            return (
+              <Accordion.Item key={index} eventKey={index}>
+                <Accordion.Header>{element}</Accordion.Header>
+                <Accordion.Body>
+                <Button
+                    variant="link"
+                    onClick={() => handleOpenDeleteModal(element)}
+                >
+                    Usuń
+                </Button>
+                </Accordion.Body>
+              </Accordion.Item>
+            );
+          })}
+        </Accordion>
+        <Button className="mt-4" onClick={setIsAddModalActive}>
+          Dodaj wydział
+        </Button>
+        
+        <FacultyDeleteModal 
+            show={isDeleteModalActive}
+            onHide={() => setIsDeleteModalActive(false)}
+            faculty={deleteFaculty}
+            faculties={faculties}
+            setFaculties={setFaculties}
         />
-        </>
+
+        <FacultyAddModal 
+            show={isAddModalActive}
+            onHide={() => setIsAddModalActive(false)}
+            userId={userId}
+            faculties={faculties}
+            setFaculties={setFaculties}
+        />
+      </ContentWrapper>
     );
 }

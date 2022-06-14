@@ -5,7 +5,7 @@ import LoadingIcon from "../Graphic/Load_White.png";
 import "../BootstrapCustom.css";
 import axios from "axios";
 
-export default function FacultyModal({ show, onHide, faculty, faculties, setFaculties }) {
+export default function FacultyDeleteModal({ show, onHide, faculty, faculties, setFaculties }) {
 
     const [isRequestSent, setIsRequestSent] = useState(false);
 
