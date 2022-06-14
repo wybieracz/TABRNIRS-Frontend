@@ -8,7 +8,7 @@ import { RatioWrapper } from "./MajorsPageStyled";
 import "../BootstrapCustom.css";
 import axios from "axios";
 
-export default function MajorModal({ show, onHide, faculties, subjects, handleGetSpecializations }) {
+export default function MajorModal({ show, onHide, faculties, subjects, specializations, setSpecializations }) {
 
   const [isRequestSent, setIsRequestSent] = useState(false);
   const [data, setData] = useState(defaultMajorData);
@@ -75,7 +75,7 @@ export default function MajorModal({ show, onHide, faculties, subjects, handleGe
 
     const payload = {
       ...data,
-      formula: `${ratio} * PB + ${1 - ratio} * PD`,
+      formula: `${ratio} * PB + ${Math.round((1 - ratio) * 10) / 10} * PD`,
       recruitationDate: `${date.year}-${getMonthNumber(date.month)}-${date.day}T${date.hour}:${date.minutes}:00.000Z`
     };
 
@@ -89,6 +89,10 @@ export default function MajorModal({ show, onHide, faculties, subjects, handleGe
       .then((response) => {
         specialization = response.data.find(element => element.specializationName === payload.specializationName)
       })
+
+      const temp = specializations;
+      temp.push(specialization)
+      setSpecializations(temp)
 
       for(let i = 0; i < count; i++) {
 
@@ -104,7 +108,6 @@ export default function MajorModal({ show, onHide, faculties, subjects, handleGe
         Promise.all(arr)
           .then((values) => {
             setIsRequestSent(false)
-            handleGetSpecializations()
             onHideExtended()
             alert("Poprawnie dodano nowy kierunek!")}
           )

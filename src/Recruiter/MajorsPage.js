@@ -7,7 +7,7 @@ import MajorModal from "./MajorModal";
 
 axios.defaults.withCredentials = true;
 
-export default function Majors({ userId, faculties, specializations, subjects, handleGetSpecializations }) {
+export default function Majors({ userId, faculties, specializations, subjects, setSpecializations }) {
 
   const [isModalActive, setIsModalActive] = useState(false);
 
@@ -24,17 +24,20 @@ export default function Majors({ userId, faculties, specializations, subjects, h
             <Accordion.Item key={index} eventKey={index}>
               <Accordion.Header>{element}</Accordion.Header>
               <Accordion.Body>
-                {specializations.length === 0 ?
-                  <div>Brak przedmiotów</div>
+                {!specializations.find(subElement => element === subElement.facultyName) ?
+                  <p>Brak przedmiotów</p>
                 : 
-                  specializations.map((subElement, subIndex) => {
+                  <ul>
+                  {specializations.map((subElement, subIndex) => {
                     return (
                       element === subElement.facultyName ?
-                        <div key={subIndex}>{subElement.specializationName}</div>
+                        <li key={subIndex}>{subElement.specializationName}</li>
                       :
                         null
                     )
                 })}
+                  </ul>
+                }
               </Accordion.Body>
             </Accordion.Item>
           );
@@ -48,7 +51,8 @@ export default function Majors({ userId, faculties, specializations, subjects, h
         onHide={() => setIsModalActive(false)}
         faculties={faculties}
         subjects={subjects}
-        handleGetSpecializations={handleGetSpecializations}
+        specializations={specializations}
+        setSpecializations={setSpecializations}
       />
     </ContentWrapper>
   );

@@ -12,12 +12,14 @@ export default function RecruiterNavBar({ setUserId, setIsRecruiter }) {
 
     async function handleLogout() {
         try {
-            await axios.post("https://dev-tabrnirs-be-app.azurewebsites.net/logout").then(
-                response => {
-                    setIsRecruiter(false)
-                    setUserId("")
-                    navigate("/")
-                }
+            await axios
+                .post("https://dev-tabrnirs-be-app.azurewebsites.net/logout")
+                .then(
+                    response => {
+                        setIsRecruiter(false)
+                        setUserId("")
+                        navigate("/")
+                    }
             );
         } catch (error) {
             console.error(error)
