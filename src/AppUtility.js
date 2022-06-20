@@ -5,13 +5,13 @@ async function getSubjects(isRecruiter, setSubjects, setRecruitmentData) {
     await axios
       .get("https://dev-tabrnirs-be-app.azurewebsites.net/subjects")
       .then((response) => {
-        if(!isRecruiter) {
+        if (!isRecruiter) {
           const temp = response.data.map(function (element) {
             return { active: false, subject: element, points: 0 };
           });
           getRecruitmentData(temp, setRecruitmentData);
         }
-        setSubjects(response.data)
+        setSubjects(response.data);
       });
   } catch (error) {
     console.error(error);
@@ -103,27 +103,48 @@ async function getFaculties(setFaculties) {
 }
 
 async function getSpecializations(setSpecs) {
-    try {
-        await axios.get("https://dev-tabrnirs-be-app.azurewebsites.net/spec").then(
-            response => {
-              setSpecs(response.data)
-            }
-        );
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function getIsRecruiter(setIsRecruiter) {
   try {
     await axios
-    .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
-    .then((response) => {
-      setIsRecruiter(response.data)
-    });
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/spec")
+      .then((response) => {
+        setSpecs(response.data);
+      });
   } catch (error) {
     console.error(error);
   }
 }
 
-export { getSubjects, getUserId, getUser, getApps, getFaculties, getSpecializations, getIsRecruiter };
+async function getIsRecruiter(setIsRecruiter) {
+  try {
+    await axios
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/user/admin")
+      .then((response) => {
+        setIsRecruiter(response.data);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getUsers(setUsers) {
+  try {
+    await axios
+      .get("https://dev-tabrnirs-be-app.azurewebsites.net/users")
+      .then((response) => {
+        setUsers(response.data);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export {
+  getSubjects,
+  getUserId,
+  getUser,
+  getApps,
+  getFaculties,
+  getSpecializations,
+  getIsRecruiter,
+  getUsers,
+};
