@@ -21,8 +21,10 @@ import {
   getApps,
   getFaculties,
   getSpecializations,
-  getIsRecruiter
+  getIsRecruiter,
+  getUsers,
 } from "./AppUtility";
+import RecruiterApplications from "./Recruiter/RecruiterApplicationsPage";
 
 function App() {
   const [userId, setUserId] = useState("");
@@ -31,34 +33,44 @@ function App() {
   const [faculties, setFaculties] = useState([]);
   const [specializations, setSpecializations] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // user
   const [apps, setApps] = useState([]);
-  const [recruitmentData, setRecruitmentData] = useState(defaultRecruitmentData);
+  const [recruitmentData, setRecruitmentData] = useState(
+    defaultRecruitmentData
+  );
 
   // recruiter
 
   useEffect(() => {
     if (userId !== "") {
       if (isRecruiter) {
-        getUser(setPersonalData)
+        getUser(setPersonalData);
       } else {
-        getUser(setPersonalData)
-        getApps(setApps)
+        getUser(setPersonalData);
+        getApps(setApps);
       }
-      getSpecializations(setSpecializations)
-      getSubjects(isRecruiter, setSubjects, setRecruitmentData)
-      getFaculties(setFaculties)
+      getUsers(setUsers);
+      getSpecializations(setSpecializations);
+      getSubjects(isRecruiter, setSubjects, setRecruitmentData);
+      getFaculties(setFaculties);
     } else {
-      getUserId(setUserId)
-      getIsRecruiter(setIsRecruiter)
+      getUserId(setUserId);
+      getIsRecruiter(setIsRecruiter);
     }
   }, [userId]);
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<LoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <LoginPage setUserId={setUserId} setIsRecruiter={setIsRecruiter} />
+          }
+        />
         <Route exact path="/register" element={<RegisterPage />} />
         <Route
           exact
@@ -128,7 +140,12 @@ function App() {
                 setUserId={setUserId}
                 setIsRecruiter={setIsRecruiter}
               />
-              <BlankPage />
+              <RecruiterApplications
+                faculties={faculties}
+                specializations={specializations}
+                users={users}
+                handleGetApps={() => getApps(setApps)}
+              />
             </>
           }
         />
