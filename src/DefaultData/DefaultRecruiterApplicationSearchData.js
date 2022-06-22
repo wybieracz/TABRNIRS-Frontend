@@ -1,5 +1,5 @@
 const defaultRecruiterApplicationSearchData = [
-  { faculty: "", major: "", subjects: [] },
+  { faculty: "", major: "", subjects: [], recruitationDate: "" },
 ];
 
 export { defaultRecruiterApplicationSearchData };

@@ -12,6 +12,15 @@ import { defaultApplicationData } from "../DefaultData/DefaultApplicationData";
 import ApplicationStatusIcon from "../Candidate/ApplicationStatusIcon";
 import axios from "axios";
 import EditApplicationModal from "./EditApplicationModal";
+import {
+  defaultDate,
+  getDays,
+  getMonthNumber,
+  years,
+  months,
+  hours,
+  minutes,
+} from "../DefaultData/DefaultDate";
 axios.defaults.withCredentials = true;
 
 export default function RecruiterApplications({
@@ -24,14 +33,52 @@ export default function RecruiterApplications({
   const [isRequestSent, setIsRequestSent] = useState(false);
   const [isSearchSuccess, setIsSearchSuccess] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
+  const [isStartRecrutationActive, setIsStartRecrutationActive] =
+    useState(false);
   const [usersApps, setUsersApps] = useState([]);
   const [majorDetails, setMajorDetails] = useState(
     defaultRecruiterApplicationSearchData
   );
   const [applicationToEdit, setApplicationToEdit] = useState();
+  const [date, setDate] = useState(defaultDate);
+  const [days, setDays] = useState(getDays("1", "2022"));
 
   function handleEditApplication(application) {
     setApplicationToEdit(application);
+  }
+
+  function handleStartRecrutationStatus() {
+    setIsStartRecrutationActive(!isStartRecrutationActive);
+  }
+
+  async function handleStartRecrutation() {
+    const payload = {
+      specializationId: data.major,
+      recruitationDate: `${date.year}-${getMonthNumber(date.month)}-${
+        date.day
+      }T${date.hour}:${date.minutes}:00.000Z`,
+    };
+
+    setIsRequestSent(true);
+    try {
+      await axios
+        .put(`https://dev-tabrnirs-be-app.azurewebsites.net/spec`, payload)
+        .then((response) => {
+          handleGetApps();
+          alert("Pomyślnie rozpoczęto nową turę rekrutacji!");
+          setMajorDetails({
+            ...majorDetails,
+            recrutationDate: payload.recruitationDate,
+          });
+          setIsRequestSent(false);
+          setIsStartRecrutationActive(false);
+          setDate(defaultDate);
+        });
+    } catch (error) {
+      console.error(error);
+      alert("Coś poszło nie tak :(");
+      setIsRequestSent(false);
+    }
   }
 
   async function handleSearchClick() {
@@ -41,6 +88,7 @@ export default function RecruiterApplications({
             faculty: element.facultyName,
             major: element.specializationName,
             subjects: element.additionalSubjects,
+            recrutationDate: element.recruitationDate,
           })
         : null;
     });
@@ -115,7 +163,7 @@ export default function RecruiterApplications({
     setIsSearchSuccess(true);
     console.log(isSearchSuccess);
     console.log(usersApps);
-  }, [usersApps]);
+  }, []);
 
   const [noOfRender, setNoOfRender] = useState(0);
 
@@ -179,6 +227,7 @@ export default function RecruiterApplications({
                         return data.faculty === element.facultyName ? (
                           <option value={element.specializationId} key={index}>
                             {element.specializationName}
+                            {console.log(element)}
                           </option>
                         ) : null;
                       })
@@ -205,11 +254,20 @@ export default function RecruiterApplications({
                   {majorDetails.major}
                 </p>
                 <p className="text-start fs-7 px-4">{majorDetails.faculty}</p>
+                <p className="text-start fs-7 px-4">
+                  Koniec tury rekrutacji:{" "}
+                  {majorDetails.recrutationDate
+                    .split(".")[0]
+                    .replace("T", ", godz. ")}
+                </p>
               </Col>
 
               <Col className="text-end px-5">
-                <Button className="mt-4 mx-4 justify-center" onClick={() => {}}>
-                  Rozpocznij rekrutację
+                <Button
+                  className="mt-4 mx-4 justify-center"
+                  onClick={() => handleStartRecrutationStatus()}
+                >
+                  Nowa tura
                 </Button>
                 <Button
                   className="mt-4 justify-center"
@@ -220,6 +278,115 @@ export default function RecruiterApplications({
                 </Button>
               </Col>
             </Row>
+
+            {isStartRecrutationActive ? (
+              <>
+                <Separator className="mb-4" />
+                <Form.Group className="d-grid gap-4 px-3 py-3">
+                  <Row>
+                    <Col>
+                      <Form.Group size="lg" controlId="year">
+                        <Form.Label className="px-1">Rok</Form.Label>
+                        <Form.Select
+                          value={date.year}
+                          onChange={(e) =>
+                            setDate({ ...date, year: e.target.value })
+                          }
+                        >
+                          {years.map((element, index) => (
+                            <option value={element} key={index}>
+                              {element}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+
+                    <Col>
+                      <Form.Group size="lg" controlId="month">
+                        <Form.Label className="px-1">Miesiąc</Form.Label>
+                        <Form.Select
+                          value={date.month}
+                          onChange={(e) =>
+                            setDate({ ...date, month: e.target.value })
+                          }
+                        >
+                          {months.map((element, index) => (
+                            <option value={element} key={index}>
+                              {element}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+
+                    <Col>
+                      <Form.Group size="lg" controlId="day">
+                        <Form.Label className="px-1">Dzień</Form.Label>
+                        <Form.Select
+                          value={date.day}
+                          onChange={(e) =>
+                            setDate({ ...date, day: e.target.value })
+                          }
+                        >
+                          {days.map((element, index) => (
+                            <option value={element} key={index}>
+                              {element}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+
+                    <Col>
+                      <Form.Group size="lg" controlId="hour">
+                        <Form.Label className="px-1">Godzina</Form.Label>
+                        <Form.Select
+                          value={date.hour}
+                          onChange={(e) =>
+                            setDate({ ...date, hour: e.target.value })
+                          }
+                        >
+                          {hours.map((element, index) => (
+                            <option value={element} key={index}>
+                              {element}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+
+                    <Col>
+                      <Form.Group size="lg" controlId="minutes">
+                        <Form.Label className="px-1">Minuty</Form.Label>
+                        <Form.Select
+                          value={date.minutes}
+                          onChange={(e) =>
+                            setDate({ ...date, minutes: e.target.value })
+                          }
+                        >
+                          {minutes.map((element, index) => (
+                            <option value={element} key={index}>
+                              {element}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="d-flex justify-content-end px-4 mx-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleStartRecrutation()}
+                      >
+                        Zatwierdź datę
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form.Group>
+              </>
+            ) : null}
 
             <Separator className="mb-4" />
             <AppsContentWrapper>
